@@ -4,7 +4,7 @@ import 'package:gerenciador_de_tarefas/core/enums/priority.dart';
 class TaskModel extends Equatable{
   final int? id;
   final String title;
-  final String description;
+  final String? description;
   final bool completed;
   final TaskPriority priority;
 
@@ -18,4 +18,11 @@ class TaskModel extends Equatable{
 
   @override
   List<Object?> get props => [id];
+
+  const TaskModel.empty()
+    :id = 0,
+    title = '',
+    description = null,
+    completed = false,
+    priority = TaskPriority.low;
 }
