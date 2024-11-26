@@ -14,7 +14,7 @@ class TaskManager extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes:{
-        AppRoutes.home: (context) => HomePage(),
+        AppRoutes.home: (context) => HomePage(context),
       },
     );
   }

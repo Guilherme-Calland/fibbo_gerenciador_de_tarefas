@@ -1,4 +1,4 @@
-#Tue Nov 26 15:15:26 BRT 2024
+#Tue Nov 26 16:03:57 BRT 2024
 base.0=/Users/guilhermecalland/flutter_projects/fibbo_gerenciador_de_tarefas/build/app/intermediates/dex/debug/mergeExtDexDebug/classes.dex
 base.1=/Users/guilhermecalland/flutter_projects/fibbo_gerenciador_de_tarefas/build/app/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex
 base.2=/Users/guilhermecalland/flutter_projects/fibbo_gerenciador_de_tarefas/build/app/intermediates/dex/debug/mergeProjectDexDebug/1/classes.dex
