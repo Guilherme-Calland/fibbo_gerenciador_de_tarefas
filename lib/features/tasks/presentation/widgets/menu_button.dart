@@ -59,7 +59,7 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if(expanded)
+        if(!_fadeAnimation.isDismissed)
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [... List.generate(
