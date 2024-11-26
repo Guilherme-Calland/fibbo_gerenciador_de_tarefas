@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
-import 'package:gerenciador_de_tarefas/features/presentation/widgets/labeled_button.dart';
-import 'package:gerenciador_de_tarefas/features/presentation/widgets/menu_button.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/labeled_button.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/menu_button.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage(BuildContext context, {super.key});

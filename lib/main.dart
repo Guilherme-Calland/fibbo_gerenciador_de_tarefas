@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gerenciador_de_tarefas/features/presentation/screens/home_page.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/screens/home_page.dart';
 import 'core/constants/routes.dart';
 
 void main() {

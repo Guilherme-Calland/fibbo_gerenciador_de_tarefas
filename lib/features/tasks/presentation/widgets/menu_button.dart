@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gerenciador_de_tarefas/features/presentation/widgets/labeled_button.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/labeled_button.dart';
 
 class MenuButton extends StatefulWidget {
   const MenuButton({
@@ -53,13 +53,16 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    const double spacing = 8.0;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
+        if(expanded)
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
-          children: List.generate(
+          children: [... List.generate(
             widget.actionButtons.length,
             (index) {
               return FadeTransition(
@@ -67,20 +70,17 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
                 child: Padding(
                   padding: index == 0
                       ? EdgeInsets.zero
-                      : const EdgeInsets.only(top: 8.0),
+                      : const EdgeInsets.only(top: spacing),
                   child: widget.actionButtons[index],
                 ),
               );
             },
-          ),
+          ), const SizedBox(height: spacing)],
         ),
 
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: LabeledButton(
-            icon: !expanded ? Icons.menu : Icons.close,
-            onTap: _toggleMenu,
-          ),
+        LabeledButton(
+          icon: !expanded ? Icons.menu : Icons.close,
+          onTap: _toggleMenu,
         ),
       ],
     );
