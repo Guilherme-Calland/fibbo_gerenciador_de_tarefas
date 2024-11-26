@@ -16,51 +16,22 @@ class MenuButton extends StatefulWidget {
 }
 
 class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateMixin {
-  bool expanded = false;
-  late AnimationController _controller;
-  late Animation<double> _fadeAnimation;
-
-  bool _visible = false;
+  bool _actionsVisible = false;
   double _opacity = 0.0;
+  bool _actionsOpen = false;
 
+  void _toggleMenu() {
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500), // Animation duration
-    );
-
-    _fadeAnimation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut, // Smooth easing
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose(); // Clean up the controller
-    super.dispose();
-  }
-
-  void _toggleMenu() {//fibbo1517 muda o nome desse metodo.
     setState(() {
       if(_opacity == 0.0){
-        _visible = true;
+        _actionsVisible = true;
         _opacity = 1.0;
       }else{
         _opacity = 0.0;
       }
+
+      _actionsOpen = !_actionsOpen;
     });
-    // setState(() {
-    //   expanded = !expanded;
-    //   if (expanded) {
-    //     _controller.forward(); // Start the fade-in animation
-    //   } else {
-    //     _controller.reverse(); // Reverse the animation
-    //   }
-    // });
   }
 
   @override
@@ -72,53 +43,36 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
       mainAxisSize: MainAxisSize.min,
       children: [
         AnimatedOpacity(
-              opacity: _opacity,
-              duration: const Duration(seconds: 1),
-              onEnd: () {
-                debugPrint("THIS IS THE END fibbo1517");
-                if (_opacity == 0.0) {
-                  setState(() {
-                    _visible = false; // Remove from tree when fade out completes
-                  });
-                }
-              },
-              child: Visibility(
-                visible: _visible,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [... List.generate(
-                    widget.actionButtons.length,
-                    (index) {
-                      return Padding(
-                        padding: index == 0
-                            ? EdgeInsets.zero
-                            : const EdgeInsets.only(top: spacing),
-                        child: widget.actionButtons[index],
-                      );
-                    },
-                  ), const SizedBox(height: spacing)],
-                ),
-              ),
+          opacity: _opacity,
+          duration: const Duration(milliseconds: 800),
+          onEnd: () {
+            debugPrint("THIS IS THE END fibbo1517");
+            if (_opacity == 0.0) {
+              setState(() {
+                _actionsVisible = false; // Remove from tree when fade out completes
+              });
+            }
+          },
+          child: Visibility(
+            visible: _actionsVisible,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [... List.generate(
+                widget.actionButtons.length,
+                (index) {
+                  return Padding(
+                    padding: index == 0
+                        ? EdgeInsets.zero
+                        : const EdgeInsets.only(top: spacing),
+                    child: widget.actionButtons[index],
+                  );
+                },
+              ), const SizedBox(height: spacing)],
             ),
-
-        // if(_fadeAnimation.isCompleted)
-        // Column(
-        //   crossAxisAlignment: CrossAxisAlignment.end,
-        //   children: [... List.generate(
-        //     widget.actionButtons.length,
-        //     (index) {
-        //       return Padding(
-        //         padding: index == 0
-        //             ? EdgeInsets.zero
-        //             : const EdgeInsets.only(top: spacing),
-        //         child: widget.actionButtons[index],
-        //       );
-        //     },
-        //   ), const SizedBox(height: spacing)],
-        // ),
-
+          ),
+        ),
         LabeledButton(
-          icon: !expanded ? Icons.menu : Icons.close,
+          icon: !_actionsOpen ? Icons.menu : Icons.close,
           onTap: _toggleMenu,
         ),
       ],
