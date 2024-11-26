@@ -12,12 +12,44 @@ class MenuButton extends StatefulWidget {
   final List<LabeledButton> actionButtons;
 
   @override
-  State<MenuButton> createState() => _AppMenuButtonState();
+  State<MenuButton> createState() => _MenuButtonState();
 }
 
-class _AppMenuButtonState extends State<MenuButton> {
-
+class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateMixin {
   bool expanded = false;
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500), // Animation duration
+    );
+
+    _fadeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut, // Smooth easing
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose(); // Clean up the controller
+    super.dispose();
+  }
+
+  void _toggleMenu() {
+    setState(() {
+      expanded = !expanded;
+      if (expanded) {
+        _controller.forward(); // Start the fade-in animation
+      } else {
+        _controller.reverse(); // Reverse the animation
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,30 +57,30 @@ class _AppMenuButtonState extends State<MenuButton> {
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Visibility(
-          visible: expanded,  
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [...List.generate(
-                widget.actionButtons.length,
-                (index) {
-                  return Padding(
-                    padding: index == 0
-                        ? EdgeInsets.zero
-                        : const EdgeInsets.only(top: 8.0),
-                    child: widget.actionButtons[index],
-                  );
-                },
-              ), const SizedBox(height: 16.0,)],
-          )
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: List.generate(
+            widget.actionButtons.length,
+            (index) {
+              return FadeTransition(
+                opacity: _fadeAnimation, // Apply fade-in effect
+                child: Padding(
+                  padding: index == 0
+                      ? EdgeInsets.zero
+                      : const EdgeInsets.only(top: 8.0),
+                  child: widget.actionButtons[index],
+                ),
+              );
+            },
+          ),
         ),
-        LabeledButton(
-          icon: !expanded ? Icons.menu : Icons.close,
-          onTap: (){
-            setState(() {
-              expanded = !expanded;
-            });
-          },
+
+        Padding(
+          padding: const EdgeInsets.only(top: 16.0),
+          child: LabeledButton(
+            icon: !expanded ? Icons.menu : Icons.close,
+            onTap: _toggleMenu,
+          ),
         ),
       ],
     );
