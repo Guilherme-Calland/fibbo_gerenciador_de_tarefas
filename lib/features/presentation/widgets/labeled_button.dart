@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
+import 'package:gerenciador_de_tarefas/core/constants/decorations.dart';
 
 
 class LabeledButton extends StatelessWidget {
@@ -22,10 +23,17 @@ class LabeledButton extends StatelessWidget {
       children: [
         if(label != null)
         Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: Text(label!),
+          padding: const EdgeInsets.only(right: 16.0),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: AppDecorations.shadow
+            ),
+            child: Text(label!)
+          ),
         ),
-        const SizedBox(width: 8.0,),
         GestureDetector(
           onTap: onTap,
           child: Container(
@@ -33,8 +41,10 @@ class LabeledButton extends StatelessWidget {
             width: 60,
             decoration: BoxDecoration(
               color: AppColors.mainColor,
-              borderRadius: BorderRadius.circular(20.0)
+              borderRadius: BorderRadius.circular(20.0),
+              boxShadow: AppDecorations.shadow,
             ),
+            
             child: Center(
               child: Icon(icon, color: Colors.white,size: 32,),
             ),

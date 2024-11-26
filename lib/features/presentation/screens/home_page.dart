@@ -10,6 +10,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: _buildAppbar(title: "Task Manager"),
       body: Stack( //fibbo1517
         alignment: Alignment.bottomRight,
@@ -28,7 +29,7 @@ class HomePage extends StatelessWidget {
             child: MenuButton(
               icon: Icons.menu,
               actionButtons: [
-                LabeledButton(icon: Icons.add, onTap: (){}, label: "Create task",),
+                LabeledButton(icon: Icons.add, onTap: (){}, label: "Create new task",),
                 LabeledButton(icon: Icons.cloud_outlined, onTap: (){}, label: "Fetch sample tasks from web",)
               ],
             ),

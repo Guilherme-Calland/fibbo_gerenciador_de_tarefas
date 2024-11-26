@@ -76,7 +76,7 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
         ),
 
         Padding(
-          padding: const EdgeInsets.only(top: 16.0),
+          padding: const EdgeInsets.only(top: 8.0),
           child: LabeledButton(
             icon: !expanded ? Icons.menu : Icons.close,
             onTap: _toggleMenu,
