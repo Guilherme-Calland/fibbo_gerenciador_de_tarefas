@@ -59,20 +59,18 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if(!_fadeAnimation.isDismissed)
+        if(_fadeAnimation.isCompleted)
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [... List.generate(
             widget.actionButtons.length,
             (index) {
-              return FadeTransition(
-                opacity: _fadeAnimation, // Apply fade-in effect
-                child: Padding(
-                  padding: index == 0
-                      ? EdgeInsets.zero
-                      : const EdgeInsets.only(top: spacing),
-                  child: widget.actionButtons[index],
-                ),
+
+              return Padding(
+                padding: index == 0
+                    ? EdgeInsets.zero
+                    : const EdgeInsets.only(top: spacing),
+                child: widget.actionButtons[index],
               );
             },
           ), const SizedBox(height: spacing)],
