@@ -1,0 +1,1 @@
+ /Users/guilhermecalland/flutter_projects/fibbo_gerenciador_de_tarefas/.dart_tool/flutter_build/ddf2103abd30f66c5530a79eb301ba3f/native_assets.yaml: 
