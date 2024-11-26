@@ -20,6 +20,10 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
 
+  bool _visible = false;
+  double _opacity = 0.0;
+
+
   @override
   void initState() {
     super.initState();
@@ -40,15 +44,23 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
     super.dispose();
   }
 
-  void _toggleMenu() {
+  void _toggleMenu() {//fibbo1517 muda o nome desse metodo.
     setState(() {
-      expanded = !expanded;
-      if (expanded) {
-        _controller.forward(); // Start the fade-in animation
-      } else {
-        _controller.reverse(); // Reverse the animation
+      if(_opacity == 0.0){
+        _visible = true;
+        _opacity = 1.0;
+      }else{
+        _opacity = 0.0;
       }
     });
+    // setState(() {
+    //   expanded = !expanded;
+    //   if (expanded) {
+    //     _controller.forward(); // Start the fade-in animation
+    //   } else {
+    //     _controller.reverse(); // Reverse the animation
+    //   }
+    // });
   }
 
   @override
@@ -59,22 +71,51 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if(_fadeAnimation.isCompleted)
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [... List.generate(
-            widget.actionButtons.length,
-            (index) {
+        AnimatedOpacity(
+              opacity: _opacity,
+              duration: const Duration(seconds: 1),
+              onEnd: () {
+                debugPrint("THIS IS THE END fibbo1517");
+                if (_opacity == 0.0) {
+                  setState(() {
+                    _visible = false; // Remove from tree when fade out completes
+                  });
+                }
+              },
+              child: Visibility(
+                visible: _visible,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [... List.generate(
+                    widget.actionButtons.length,
+                    (index) {
+                      return Padding(
+                        padding: index == 0
+                            ? EdgeInsets.zero
+                            : const EdgeInsets.only(top: spacing),
+                        child: widget.actionButtons[index],
+                      );
+                    },
+                  ), const SizedBox(height: spacing)],
+                ),
+              ),
+            ),
 
-              return Padding(
-                padding: index == 0
-                    ? EdgeInsets.zero
-                    : const EdgeInsets.only(top: spacing),
-                child: widget.actionButtons[index],
-              );
-            },
-          ), const SizedBox(height: spacing)],
-        ),
+        // if(_fadeAnimation.isCompleted)
+        // Column(
+        //   crossAxisAlignment: CrossAxisAlignment.end,
+        //   children: [... List.generate(
+        //     widget.actionButtons.length,
+        //     (index) {
+        //       return Padding(
+        //         padding: index == 0
+        //             ? EdgeInsets.zero
+        //             : const EdgeInsets.only(top: spacing),
+        //         child: widget.actionButtons[index],
+        //       );
+        //     },
+        //   ), const SizedBox(height: spacing)],
+        // ),
 
         LabeledButton(
           icon: !expanded ? Icons.menu : Icons.close,
