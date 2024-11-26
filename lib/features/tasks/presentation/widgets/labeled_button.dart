@@ -10,11 +10,13 @@ class LabeledButton extends StatelessWidget {
     required this.icon,
     required this.onTap,
     this.label,
+    required this.color,
   });
 
   final IconData icon;
   final Function() onTap;
   final String? label;
+  final Color color;
 
 
   @override
@@ -40,7 +42,7 @@ class LabeledButton extends StatelessWidget {
             height: 60,
             width: 60,
             decoration: BoxDecoration(
-              color: AppColors.mainColor,
+              color: color,
               borderRadius: BorderRadius.circular(20.0),
               boxShadow: AppDecorations.shadow,
             ),

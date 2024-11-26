@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/labeled_button.dart';
 
 class MenuButton extends StatefulWidget {
@@ -74,6 +75,7 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
         LabeledButton(
           icon: !_actionsOpen ? Icons.menu : Icons.close,
           onTap: _toggleMenu,
+          color: AppColors.mainColor,
         ),
       ],
     );

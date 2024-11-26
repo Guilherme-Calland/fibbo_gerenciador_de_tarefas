@@ -28,8 +28,8 @@ class HomePage extends StatelessWidget {
             child: MenuButton(
               icon: Icons.menu,
               actionButtons: [
-                LabeledButton(icon: Icons.add, onTap: (){}, label: "Create new task",),
-                LabeledButton(icon: Icons.cloud_outlined, onTap: (){}, label: "Fetch sample tasks from web",)
+                LabeledButton(icon: Icons.add, onTap: (){}, label: "Create new task", color: const Color.fromARGB(255, 76, 175, 80),),
+                LabeledButton(icon: Icons.cloud_outlined, onTap: (){}, label: "Fetch sample tasks from web", color: const Color.fromARGB(255, 255, 152, 0),)
               ],
             ),
           ) //  fibbo1517
