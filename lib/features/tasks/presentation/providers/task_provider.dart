@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:gerenciador_de_tarefas/core/enums/priority.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample_tasks_usecase.dart';
 

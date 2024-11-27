@@ -25,15 +25,18 @@ class LabeledButton extends StatelessWidget {
       children: [
         if(label != null)
         Padding(
-          padding: const EdgeInsets.only(right: 16.0),
+          padding: const EdgeInsets.only(right: 8.0),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width - 100
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
             decoration: BoxDecoration(
               color: AppColors.foregroundColor,
               borderRadius: AppDecorations.borderRadiusSmall,
               boxShadow: AppDecorations.shadow
             ),
-            child: Text(label!, style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),)
+            child: Text(label!, style: const TextStyle(fontSize: 16.0),)
           ),
         ),
         GestureDetector(

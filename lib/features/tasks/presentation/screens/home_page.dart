@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
-import 'package:gerenciador_de_tarefas/core/enums/priority.dart';
 import 'package:gerenciador_de_tarefas/core/widgets/loading_indicator.dart';
-import 'package:gerenciador_de_tarefas/core/widgets/priority_widget.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/completed_tasks_widget.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/create_task_suggestion_button.dart';
@@ -102,7 +100,7 @@ class HomePage extends StatelessWidget {
                       active: !provider.loading,
                       icon: Icons.cloud_outlined,
                       onTap: () {},
-                      label: "Fetch sample tasks from web",
+                      label: "Load sample tasks from the internet",
                       color: AppColors.webHighlight,
                     )
                   ],
