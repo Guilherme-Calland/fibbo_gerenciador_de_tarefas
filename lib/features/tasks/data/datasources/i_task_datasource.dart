@@ -1,3 +1,5 @@
+import 'package:gerenciador_de_tarefas/features/tasks/data/dto/task_response_dto.dart';
+
 abstract class ITaskDatasource{
-  Future<Map<String, dynamic>> getSampleTasks();
+  Future<List<TaskResponseDTO>> getSampleTasks();
 }

@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/data/adapters/task_adapter.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/data/datasources/i_task_datasource.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/repositories/i_task_repository.dart';
@@ -15,7 +16,12 @@ class TaskRepository implements ITaskRepository{
 
   @override
   Future<Either<Exception, List<TaskModel>>> getSampleTasks() async{
-    // TODO: implement getSampleTasks
-    throw UnimplementedError();
+    try{
+      final response = await datasource.getSampleTasks();
+      final tasks = response.map((dto) => TaskAdapter.fromDTO(dto)).toList();
+      return Right(tasks);
+    }catch(e){
+      return Left(Exception('Repository Exception: $e'));
+    }
   }
 }

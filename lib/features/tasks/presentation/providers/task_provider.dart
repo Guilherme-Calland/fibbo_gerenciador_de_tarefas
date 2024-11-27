@@ -7,8 +7,7 @@ class TaskProvider extends ChangeNotifier{
   TaskProvider({required GetSampleTasksUsecase getSampleTasksUsecase})
     : _getSampleTasksUsecase = getSampleTasksUsecase;
 
-  bool _loading = true;
-  bool get loading => _loading;
+  bool loading = true;
 
   bool _error = false;
   bool get error => _error;
@@ -16,8 +15,7 @@ class TaskProvider extends ChangeNotifier{
   final List<TaskModel> _tasks = [];
   List<TaskModel> get tasks => _tasks;
 
-  void showLoading([bool value = true]){
-    _loading = value;
+  void updateScreen(){
     notifyListeners();
   }
 

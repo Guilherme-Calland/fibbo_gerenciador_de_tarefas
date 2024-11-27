@@ -111,6 +111,7 @@ class HomePage extends StatelessWidget {
   _getSampleTasks(BuildContext context) {
     final provider = context.read<TaskProvider>();
     provider.getSampleTasks();
-    provider.showLoading(false);
+    provider.loading = true;
+    provider.updateScreen();
   }
 }
