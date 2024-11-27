@@ -12,8 +12,12 @@ class TaskProvider extends ChangeNotifier{
   bool _error = false;
   bool get error => _error;
 
+  int _completedTasks = 0;
+  int get completedTasks => _completedTasks;
+
   final List<TaskModel> _tasks = [];
   List<TaskModel> get tasks => _tasks;
+  
 
   void updateScreen(){
     notifyListeners();
@@ -26,6 +30,7 @@ class TaskProvider extends ChangeNotifier{
       _error = true;
     }, (tasksResult){
       _tasks.addAll(tasksResult);
+      _completedTasks += tasksResult.where((task) => task.completed).length;
     });
   }
 }

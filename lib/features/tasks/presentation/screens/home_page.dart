@@ -9,8 +9,9 @@ import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/task_
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage(BuildContext context, {super.key}){
-    WidgetsBinding.instance.addPostFrameCallback((_)=> _getSampleTasks(context));
+  HomePage(BuildContext context, {super.key}) {
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _getSampleTasks(context));
   }
 
   @override
@@ -34,37 +35,67 @@ class HomePage extends StatelessWidget {
             alignment: Alignment.bottomRight,
             children: [
               if (provider.loading)
-              const Center(
-                child: LoadingIndicator(),
-              )
-              else if (provider.error) 
-              const Center(
-                child: Text("Something is wrong"),
-              )
-              else if(provider.tasks.isEmpty)
-              const Center(
-                child: CreateTaskSuggestionButton(),
-              )
-
-              else              
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: ListView.builder(
+                const Center(
+                  child: LoadingIndicator(),
+                )
+              else if (provider.error)
+                const Center(
+                  child: Text("Something is wrong"),
+                )
+              else if (provider.tasks.isEmpty)
+                const Center(
+                  child: CreateTaskSuggestionButton(),
+                )
+              else
+                ListView.separated(
+                  separatorBuilder: (context, index) => const SizedBox(
+                    height: 8.0,
+                  ),
                   itemCount: provider.tasks.length,
                   itemBuilder: (context, index) {
                     final model = provider.tasks[index];
                     const horizontalPadding = 16.0;
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                        left: horizontalPadding,
-                        right: horizontalPadding,
-                        top: 16.0,
-                      ),
-                      child: TaskWidget(model),
+                    final firstItem = index == 0;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (firstItem)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              top: 24.0,
+                              bottom: 16.0,
+                              left: horizontalPadding,
+                              right: horizontalPadding,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Completed Tasks:',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(width: 4.0),
+                                Text(
+                                  '${provider.completedTasks}/${provider.tasks.length}',
+                                  style: const TextStyle(fontSize: 18),
+                                ),
+                              ],
+                            ),
+                          ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: horizontalPadding,
+                            right: horizontalPadding,
+                            top: firstItem ? 0.0 : 8.0,
+                          ),
+                          child: TaskWidget(model),
+                        ),
+                      ],
                     );
                   },
                 ),
-              ),
               Positioned(
                 right: 24,
                 bottom: 32,
@@ -95,12 +126,11 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-  
-  Future<void> _getSampleTasks(BuildContext context) async{
+
+  Future<void> _getSampleTasks(BuildContext context) async {
     final provider = context.read<TaskProvider>();
     await provider.getSampleTasks();
     provider.loading = false;
     provider.updateScreen();
   }
 }
-
