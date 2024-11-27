@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/widgets/loading_indicator.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/completed_tasks_widget.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/create_task_suggestion_button.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/labeled_button.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/menu_button.dart';
@@ -60,29 +61,9 @@ class HomePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (firstItem)
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 24.0,
-                              bottom: 16.0,
-                              left: horizontalPadding,
-                              right: horizontalPadding,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Completed Tasks:',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(width: 4.0),
-                                Text(
-                                  '${provider.completedTasks}/${provider.tasks.length}',
-                                  style: const TextStyle(fontSize: 18),
-                                ),
-                              ],
-                            ),
+                          CompletedTasksWidget(
+                            taskCount: provider.tasks.length,
+                            completedTasks: provider.completedTasks,
                           ),
                         Padding(
                           padding: EdgeInsets.only(

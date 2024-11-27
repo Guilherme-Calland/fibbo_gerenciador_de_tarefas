@@ -1,5 +1,5 @@
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/enums/priority.dart';
 
@@ -12,10 +12,12 @@ class PriorityWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      'prority',
-      style: TextStyle(
+    return Container(
+      height: 14,
+      width: 14,
+      decoration: BoxDecoration(
         color: _priorityColor,
+        borderRadius: BorderRadius.circular(100)
       ),
     );
   }

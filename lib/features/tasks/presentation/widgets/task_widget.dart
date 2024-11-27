@@ -15,7 +15,6 @@ class TaskWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.foregroundColor,
         borderRadius: AppDecorations.borderRadiusSmall,
@@ -25,11 +24,28 @@ class TaskWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(model.title, style: const TextStyle(fontSize: 16),),
-          PriorityWidget(model.priority),
-          if(model.description != null)
-            Text(model.description!, style: const TextStyle(color: AppColors.inactiveColor),),
-          Text(model.completed? 'completed' : 'not completed'),
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0, bottom: 1.0, right: 3.0),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: PriorityWidget(model.priority),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  model.title,
+                  style: const TextStyle(fontSize: 16),
+                ),
+                if(model.description != null)
+                  Text(model.description!, style: const TextStyle(color: AppColors.inactiveColor),),
+                Text(model.completed? 'completed' : 'not completed'),
+              ],
+            ),
+          )
         ],
       ),
     );
