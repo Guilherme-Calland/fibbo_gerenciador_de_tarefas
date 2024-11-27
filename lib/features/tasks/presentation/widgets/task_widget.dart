@@ -21,15 +21,15 @@ class TaskWidget extends StatelessWidget {
         borderRadius: AppDecorations.borderRadius,
         boxShadow: AppDecorations.shadow
       ),
-      height: 100,
       width: double.infinity,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(model.title),
-          if(model.description != null)
-          Text(model.description!),
+          Text(model.title, style: const TextStyle(fontSize: 16),),
           PriorityWidget(model.priority),
-          Text(model.completed? 'completed' : 'not completed')
+          if(model.description != null)
+            Text(model.description!, style: const TextStyle(color: AppColors.inactiveColor),),
+          Text(model.completed? 'completed' : 'not completed'),
         ],
       ),
     );

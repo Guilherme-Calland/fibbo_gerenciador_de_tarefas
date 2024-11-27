@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
-import 'package:gerenciador_de_tarefas/core/constants/decorations.dart';
 import 'package:gerenciador_de_tarefas/core/widgets/loading_indicator.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/create_task_suggestion_button.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/labeled_button.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/menu_button.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/task_widget.dart';
@@ -30,52 +30,40 @@ class HomePage extends StatelessWidget {
       ),
       body: Consumer<TaskProvider>(
         builder: (context, provider, _) {
-          if (provider.loading) {
-            return const Center(
-              child: LoadingIndicator(),
-            );
-          }
-          if (provider.error) {
-            return const Center(
-              child: Text("Something is wrong"),
-            );
-          }
-          if(provider.tasks.isEmpty){
-            return Center(
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                decoration: BoxDecoration(
-                    color: AppColors.foregroundColor,
-                    borderRadius: AppDecorations.borderRadius,
-                    boxShadow: AppDecorations.shadow),
-                child: const Text(
-                  "Task list empty, add a new task!",
-                  style: TextStyle(fontSize: 32,),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            );
-          }
-
           return Stack(
             alignment: Alignment.bottomRight,
             children: [
-              ListView.builder(
-                itemCount: provider.tasks.length,
-                itemBuilder: (context, index) {
-                  final model = provider.tasks[index];
-                  const horizontalPadding = 16.0;
-                  bool firstItem = index == 0;
-                  final double topPadding = firstItem ? 0.0 : 8.0;
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      left: horizontalPadding,
-                      right: horizontalPadding,
-                      top: topPadding,
-                    ),
-                    child: TaskWidget(model),
-                  );
-                },
+              if (provider.loading)
+              const Center(
+                child: LoadingIndicator(),
+              )
+              else if (provider.error) 
+              const Center(
+                child: Text("Something is wrong"),
+              )
+              else if(provider.tasks.isEmpty)
+              const Center(
+                child: CreateTaskSuggestionButton(),
+              )
+
+              else              
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: ListView.builder(
+                  itemCount: provider.tasks.length,
+                  itemBuilder: (context, index) {
+                    final model = provider.tasks[index];
+                    const horizontalPadding = 16.0;
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                        left: horizontalPadding,
+                        right: horizontalPadding,
+                        top: 16.0,
+                      ),
+                      child: TaskWidget(model),
+                    );
+                  },
+                ),
               ),
               Positioned(
                 right: 24,
@@ -108,10 +96,11 @@ class HomePage extends StatelessWidget {
     );
   }
   
-  _getSampleTasks(BuildContext context) {
+  Future<void> _getSampleTasks(BuildContext context) async{
     final provider = context.read<TaskProvider>();
-    provider.getSampleTasks();
-    provider.loading = true;
+    await provider.getSampleTasks();
+    provider.loading = false;
     provider.updateScreen();
   }
 }
+

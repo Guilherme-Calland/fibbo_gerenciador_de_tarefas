@@ -11,4 +11,5 @@ class AppDecorations{
   ];
 
   static final borderRadius = BorderRadius.circular(20.0);
+  static final borderRadiusSmall = BorderRadius.circular(10.0);
 }
