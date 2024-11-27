@@ -28,8 +28,8 @@ class HomePage extends StatelessWidget {
             child: MenuButton(
               icon: Icons.menu,
               actionButtons: [
-                LabeledButton(icon: Icons.add, onTap: (){}, label: "Create new task", color: const Color.fromARGB(255, 76, 175, 80),),
-                LabeledButton(icon: Icons.cloud_outlined, onTap: (){}, label: "Fetch sample tasks from web", color: const Color.fromARGB(255, 255, 152, 0),)
+                LabeledButton(icon: Icons.add, onTap: (){}, label: "Create new task", color: AppColors.createHighlight,),
+                LabeledButton(icon: Icons.cloud_outlined, onTap: (){}, label: "Fetch sample tasks from web", color: AppColors.cloudHighlight,)
               ],
             ),
           ) //  fibbo1517
@@ -40,7 +40,6 @@ class HomePage extends StatelessWidget {
 
 
   AppBar _buildAppbar({required String title}) {
-    print("\nbuildappbar fibbo1517\n");
     return AppBar(
       backgroundColor: AppColors.mainColorDark,
     title: Text(

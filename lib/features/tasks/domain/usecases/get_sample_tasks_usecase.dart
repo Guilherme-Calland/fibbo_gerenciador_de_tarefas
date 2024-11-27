@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:gerenciador_de_tarefas/core/usecase.dart';
+import 'package:gerenciador_de_tarefas/core/usecase/usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/repositories/i_task_repository.dart';
 

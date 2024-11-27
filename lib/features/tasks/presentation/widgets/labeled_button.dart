@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/constants/decorations.dart';
 
 
