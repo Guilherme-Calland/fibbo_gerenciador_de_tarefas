@@ -13,14 +13,14 @@ class TaskManager extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(providers: AppProvider.providers);
-    
-    
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      routes:{
-        AppRoutes.home: (context) => HomePage(context),
-      },
+    return MultiProvider(
+      providers: AppProvider.providers,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        routes:{
+          AppRoutes.home: (context) => HomePage(context),
+        },
+      ),
     );
   }
 }

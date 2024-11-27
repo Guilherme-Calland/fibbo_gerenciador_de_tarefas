@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/data/datasources/i_task_datasource.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/data/datasources/implementation/task_datasource.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/repositories/i_task_repository.dart';
 
@@ -13,8 +12,6 @@ class TaskRepository implements ITaskRepository{
   }
 
   final ITaskDatasource datasource;
-
-
 
   @override
   Future<Either<Exception, List<TaskModel>>> getSampleTasks() async{

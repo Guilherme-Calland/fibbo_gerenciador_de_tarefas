@@ -9,4 +9,6 @@ class AppDecorations{
       offset: const Offset(0, 4), 
     ),
   ];
+
+  static final borderRadius = BorderRadius.circular(20.0);
 }

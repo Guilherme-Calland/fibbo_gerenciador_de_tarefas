@@ -7,10 +7,12 @@ class MenuButton extends StatefulWidget {
     super.key,
     required this.icon,
     required this.actionButtons,
+    this.active = true
   });
 
   final IconData icon;
   final List<LabeledButton> actionButtons;
+  final bool active;
 
   @override
   State<MenuButton> createState() => _MenuButtonState();
@@ -47,7 +49,6 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
           opacity: _opacity,
           duration: const Duration(milliseconds: 800),
           onEnd: () {
-            debugPrint("THIS IS THE END fibbo1517");
             if (_opacity == 0.0) {
               setState(() {
                 _actionsVisible = false; // Remove from tree when fade out completes
@@ -75,7 +76,8 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
         LabeledButton(
           icon: !_actionsOpen ? Icons.menu : Icons.close,
           onTap: _toggleMenu,
-          color: AppColors.mainColor,
+          color:  AppColors.mainColor ,
+          active: widget.active,
         ),
       ],
     );

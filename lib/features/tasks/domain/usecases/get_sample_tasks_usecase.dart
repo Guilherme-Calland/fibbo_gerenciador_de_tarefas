@@ -9,7 +9,7 @@ class GetSampleTasksUsecase extends Usecase<TaskModel, NoParams>{
   GetSampleTasksUsecase(this.repository);
 
   @override
-  Future<Either<Exception, List<TaskModel>>> call(NoParams params) async{
+  Future<Either<Exception, List<TaskModel>>> call([NoParams params = const NoParams()]) async{
     return await repository.getSampleTasks();
   }
   

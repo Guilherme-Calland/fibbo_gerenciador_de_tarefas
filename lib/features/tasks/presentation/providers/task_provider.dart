@@ -1,10 +1,33 @@
 import 'package:flutter/foundation.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample_tasks_usecase.dart';
 
 class TaskProvider extends ChangeNotifier{
-  final GetSampleTasksUsecase getSampleTasksUsecase;
-  TaskProvider({required this.getSampleTasksUsecase});
+  final GetSampleTasksUsecase _getSampleTasksUsecase;
+  TaskProvider({required GetSampleTasksUsecase getSampleTasksUsecase})
+    : _getSampleTasksUsecase = getSampleTasksUsecase;
 
-  bool _loading = false;
+  bool _loading = true;
   bool get loading => _loading;
+
+  bool _error = false;
+  bool get error => _error;
+
+  final List<TaskModel> _tasks = [];
+  List<TaskModel> get tasks => _tasks;
+
+  void showLoading([bool value = true]){
+    _loading = value;
+    notifyListeners();
+  }
+
+  Future<void> getSampleTasks()async{
+    final result = await _getSampleTasksUsecase();
+    result.fold((error){
+      debugPrint('$error');
+      _error = true;
+    }, (tasksResult){
+      _tasks.addAll(tasksResult);
+    });
+  }
 }
