@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:gerenciador_de_tarefas/core/enums/priority.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task_model/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -48,9 +48,6 @@ class CreateTaskProvider extends ChangeNotifier{
       
       _loading = true;
       _updateWidgetsOnScreen();
-
-
-
 
       // _loading = false;
     }

@@ -4,7 +4,7 @@ import 'package:gerenciador_de_tarefas/core/constants/decorations.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/checkbox.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/delete_icon.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/priority_widget.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task_model/task.dart';
 
 class TaskCard extends StatefulWidget {
   const TaskCard(

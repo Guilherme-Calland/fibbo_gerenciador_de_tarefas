@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task_model/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/create_task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/app_text_input_field.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/priority_dropdown.dart';
