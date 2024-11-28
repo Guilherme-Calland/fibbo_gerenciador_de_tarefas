@@ -96,11 +96,11 @@ class TaskProvider extends ChangeNotifier{
   void refreshSamplePage(BuildContext context){
     _showWarningDialog(
       context: context,
-      text: 'If you proceed, all current tasks will be deleted. This action cannot be undone.',
+      text: 'If you proceed, all current tasks will be replaced by new ones. This action cannot be undone.',
       onOkPressed: (dialogContext) => _onRefreshConfirm(
         context,
       ),
-      okButtonColor: AppColors.deleteHighlight
+      okButtonColor: AppColors.webHighlight
     );
   }
 

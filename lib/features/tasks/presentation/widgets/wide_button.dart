@@ -11,6 +11,7 @@ class WideButton extends StatelessWidget {
     this.transparentAndBordered = false,
     this.height,
     this.fontSize,
+    this.loading = false
   });
 
   final String label;
@@ -19,11 +20,12 @@ class WideButton extends StatelessWidget {
   final bool transparentAndBordered;
   final double? height;
   final double? fontSize;
+  final bool loading;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: !loading ? onTap : null,
       child: Container(
         height: height,
         width: double.infinity,
@@ -35,7 +37,7 @@ class WideButton extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            label,
+            loading ? "Loading..." : label,
             style: TextStyle(
               color: transparentAndBordered ? color : Colors.white,
               fontSize: fontSize ?? 18,

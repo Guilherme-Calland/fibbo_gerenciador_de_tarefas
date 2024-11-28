@@ -20,7 +20,7 @@ class TaskManager extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         routes:{
           AppRoutes.home: (context) => HomePage(context),
-          AppRoutes.create: (_) => const CreateTaskPage()
+          AppRoutes.create: (context) => CreateTaskPage(context)
         },
       ),
     );

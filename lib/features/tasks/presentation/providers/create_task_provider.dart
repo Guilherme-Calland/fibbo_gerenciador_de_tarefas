@@ -17,11 +17,15 @@ class CreateTaskProvider extends ChangeNotifier{
   TaskPriority _priority = TaskPriority.low;
   TaskPriority get priority => _priority;
 
+  bool _loading = false;
+  bool get loading => _loading;
+
   clear(){
     _titleController.clear();
     _descriptionController.clear();
     _titleError = false;
     _priority = TaskPriority.low;
+    _loading = false;
   }
 
   void onPriorityChanged(TaskPriority? value) {
@@ -33,7 +37,7 @@ class CreateTaskProvider extends ChangeNotifier{
     _titleError = _titleController.text.isEmpty;
 
     bool validFields = !_titleError;
-    if(!validFields){
+    if(validFields){
       final int newTaskId = context.read<TaskProvider>().totalTasks + 1;
       final newTask = TaskModel(
         id: newTaskId,
@@ -41,9 +45,16 @@ class CreateTaskProvider extends ChangeNotifier{
         description: _descriptionController.text.isEmpty ? null : _descriptionController.text,
         priority: priority,
       );
-
       
+      _loading = true;
+      _updateWidgetsOnScreen();
+
+
+
+
+      // _loading = false;
     }
+
     _updateWidgetsOnScreen();
   }
 

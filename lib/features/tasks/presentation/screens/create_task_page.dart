@@ -8,7 +8,9 @@ import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/wide_
 import 'package:provider/provider.dart';
 
 class CreateTaskPage extends StatelessWidget {
-  const CreateTaskPage({super.key, this.task});
+  CreateTaskPage(BuildContext context, {super.key, this.task}){
+    context.read<CreateTaskProvider>().clear();
+  }
 
   final TaskModel? task;
 
@@ -40,7 +42,7 @@ class CreateTaskPage extends StatelessWidget {
                 children: [
                   const SizedBox(height: 24.0),
                   AppTextInputField(
-                    label: 'Title',
+                    label: '* Title',
                     controller: context.read<CreateTaskProvider>().titleController,
                     error: provider.titleError,
                     errorText: "Title cannot be empty",
@@ -59,6 +61,7 @@ class CreateTaskPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 32.0),
                   WideButton(
+                    loading: provider.loading,
                     height: 56,
                     fontSize: 24,
                     label: task == null ? 'Add' : 'Edit',
