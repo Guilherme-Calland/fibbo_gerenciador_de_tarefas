@@ -16,7 +16,7 @@ class TaskDatasource implements ITaskDatasource{
 
   @override
   Future<List<TaskResponseDTO>> getSampleTasks() async {
-    const String url = 'https://dummyjson.com/todos';
+    const String url = 'https://dummyjson.com/todos?limit=100';
     final response = await apiClient.get(url);
     bool success = response.statusCode == 200;
     if(success){

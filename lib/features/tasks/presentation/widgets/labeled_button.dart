@@ -36,7 +36,7 @@ class LabeledButton extends StatelessWidget {
               borderRadius: AppDecorations.borderRadiusSmall,
               boxShadow: AppDecorations.shadow
             ),
-            child: Text(label!, style: const TextStyle(fontSize: 16.0),)
+            child: Text(label!, style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),)
           ),
         ),
         GestureDetector(
@@ -49,7 +49,6 @@ class LabeledButton extends StatelessWidget {
               borderRadius: AppDecorations.borderRadius,
               boxShadow: AppDecorations.shadow,
             ),
-            
             child: Center(
               child: Icon(icon, color: AppColors.foregroundColor ,size: 32,),
             ),

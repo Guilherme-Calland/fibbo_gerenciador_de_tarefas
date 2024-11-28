@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
+import 'package:gerenciador_de_tarefas/core/widgets/delete_icon.dart';
 import 'package:gerenciador_de_tarefas/core/widgets/loading_indicator.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/completed_tasks_widget.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/create_task_suggestion_button.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/labeled_button.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/menu_button.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/task_widget.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/task_card.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -17,6 +18,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    debugPrint("fibbo1517 building");
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
@@ -48,10 +51,7 @@ class HomePage extends StatelessWidget {
                   child: CreateTaskSuggestionButton(),
                 )
               else
-                ListView.separated(
-                  separatorBuilder: (context, index) => const SizedBox(
-                    height: 8.0,
-                  ),
+                ListView.builder(
                   itemCount: provider.tasks.length,
                   itemBuilder: (context, index) {
                     final model = provider.tasks[index];
@@ -66,24 +66,26 @@ class HomePage extends StatelessWidget {
                             children: [
                               CompletedTasksWidget(
                                 taskCount: provider.tasks.length,
-                                completedTasks: provider.completedTasks,
+                                completedTasks: provider.completedTaskCount,
                               ),
                             ],
                           ),
-                        Padding(
-                          padding: EdgeInsets.only(
+                        TaskCard(
+                          model,
+                          padding: const EdgeInsets.only(
                             left: horizontalPadding,
                             right: horizontalPadding,
-                            top: firstItem ? 0.0 : 8.0,
+                            top: 8.0
                           ),
-                          child: TaskWidget(model),
+                          onCompleteToggle: (){},
+                          onDeletePressed: ()=> provider.deleteTask(model.id!),
                         ),
                       ],
                     );
                   },
                 ),
               Positioned(
-                right: 24,
+                right: 16,
                 bottom: 32,
                 child: MenuButton(
                   active: !provider.loading,
@@ -120,3 +122,4 @@ class HomePage extends StatelessWidget {
     provider.updateScreen();
   }
 }
+

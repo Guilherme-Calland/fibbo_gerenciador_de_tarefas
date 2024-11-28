@@ -15,8 +15,8 @@ class TaskProvider extends ChangeNotifier{
   final List<TaskModel> _tasks = [];
   List<TaskModel> get tasks => _tasks;
 
-  int _completedTasks = 0;
-  int get completedTasks => _completedTasks;
+  int _completedTaskCount = 0;
+  int get completedTaskCount => _completedTaskCount;
 
   void updateScreen(){
     notifyListeners();
@@ -28,13 +28,30 @@ class TaskProvider extends ChangeNotifier{
       debugPrint('$error');
       _error = true;
     }, (tasksResult){
-      tasksResult.forEach((task){
-        _tasks.add(task);
-        
-        if(task.completed) _completedTasks++;
-      });
-      _tasks.addAll(tasksResult);
-      _completedTasks += tasksResult.where((task) => task.completed).length;
+      for (var task in tasksResult) {
+        _tasks.add(task);        
+        if(task.completed) _completedTaskCount++;
+      }
     });
+  }
+
+  deleteTask(int id) {
+    for(var task in _tasks){
+      if(task.id == id){
+        _tasks.remove(task);
+        if(task.completed){
+          _completedTaskCount--;
+        }
+      }
+    }
+    _tasks.removeWhere((task) => task.id == id);
+  }
+
+  toggleCompleted(TaskModel task){
+    // for(var t in _tasks){
+    //   if(task.id == t.id){
+    //     task.completed = !t.completed;
+    //   }
+    // }
   }
 }
