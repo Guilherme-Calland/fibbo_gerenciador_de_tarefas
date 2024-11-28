@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 
 class TaskCountProvider extends ChangeNotifier{
+  // fibbo, remove isso aqui
   int _taskCount = 0;
   int get taskCount => _taskCount;
 

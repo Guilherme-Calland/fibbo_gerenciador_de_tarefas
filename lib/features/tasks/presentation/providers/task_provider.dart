@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
+import 'package:gerenciador_de_tarefas/core/widgets/warning_dialog.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/data/dto/request/task_request_dto.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample_tasks_usecase.dart';
@@ -27,10 +29,15 @@ class TaskProvider extends ChangeNotifier{
   int _currentPage = 1;
   int get currentPage => _currentPage;
 
+  final int _pageSize = 10;
+
   Future<bool> _getSampleTasks({
     required BuildContext context,
   }) async {
-    final params = TaskPageRequestDTO(pageNumber: currentPage, pageSize: 10);
+    final params = TaskPageRequestDTO(
+      pageNumber: currentPage,
+      pageSize: _pageSize,
+    );
     final result = await _getSampleTasksUsecase(params);
     bool isLastPage = false;
     result.fold(
@@ -62,8 +69,6 @@ class TaskProvider extends ChangeNotifier{
   deleteTask({required BuildContext context,required TaskModel task}) {
     _tasks.remove(task);
     context.read<TaskCountProvider>().onTaskDelete(task);
-
-    //fibbo
     _updateWidgetOnScreen();
 
     context.read<TaskScrollProvider>().checkScrollExtent(context);
@@ -89,5 +94,41 @@ class TaskProvider extends ChangeNotifier{
     await _getSampleTasks(context: context);
     _loading = false;
     _updateWidgetOnScreen();
+  }
+
+  void _clear(){
+    _currentPage = 1;
+    _tasks.clear();
+    _error = false;
+  }
+
+  void refreshSamplePage(BuildContext backgroundPageContext){
+    showDialog(context: backgroundPageContext, builder: (dialogContext){
+      return Scaffold(
+        backgroundColor: Colors.black.withOpacity(0.0),
+        body: Center(
+          child: WarningDialog(
+            title: 'If you proceed, all current tasks will be deleted. This action cannot be undone.',
+            onOkPressed: () => _onRefreshConfirm(
+              backgroundPageContext: backgroundPageContext,
+              dialogContext: dialogContext,
+            ),
+            okButtonColor: AppColors.webHighlight,
+          ),
+        ),
+      );
+    });
+  }
+
+  void _onRefreshConfirm({
+    required BuildContext backgroundPageContext,
+    required BuildContext dialogContext,
+  }) {
+    _clear();
+    _loading = true;
+    _updateWidgetOnScreen();
+
+    Navigator.pop(dialogContext);
+    getFirstSamplePage(backgroundPageContext);
   }
 }

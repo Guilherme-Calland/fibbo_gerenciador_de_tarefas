@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/widgets/loading_indicator.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_count_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_scroll_provider.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/completed_tasks_widget.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/create_task_suggestion_button.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/labeled_button.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/menu_button.dart';
@@ -54,7 +52,7 @@ class HomePage extends StatelessWidget {
                 )
               else if (taskProvider.error)
                 const Center(
-                  child: Text("Something is wrong"),
+                  child: Text("An error has occurred"),
                 )
               else if (taskProvider.tasks.isEmpty)
                 const Center(
@@ -76,14 +74,16 @@ class HomePage extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Consumer<TaskCountProvider>(
-                                builder: (context, countProvider, _) {
-                                  return CompletedTasksWidget(
-                                    taskCount: countProvider.taskCount,
-                                    completedTasks: countProvider.completedTaskCount,
-                                  );
-                                }
-                              ),
+                              SizedBox(height: 24.0),
+                              // fibbo, remove isso aqui, 
+                              // Consumer<TaskCountProvider>(
+                              //   builder: (context, countProvider, _) {
+                              //     return CompletedTasksWidget(
+                              //       taskCount: countProvider.taskCount,
+                              //       completedTasks: countProvider.completedTaskCount,
+                              //     );
+                              //   }
+                              // ),
                             ],
                           ),
                         TaskCard(
@@ -115,7 +115,6 @@ class HomePage extends StatelessWidget {
                             ),
                           );
                         })
-                        
                       ],
                     );
                   },
@@ -137,7 +136,7 @@ class HomePage extends StatelessWidget {
                     LabeledButton(
                       active: !taskProvider.loading,
                       icon: Icons.cloud_outlined,
-                      onTap: () {},
+                      onTap: () => taskProvider.refreshSamplePage(context),
                       label: "Load sample tasks from the internet",
                       color: AppColors.webHighlight,
                     )
