@@ -1,9 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample_tasks_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_count_provider.dart';
-import 'package:gerenciador_de_tarefas/main.dart';
 import 'package:provider/provider.dart';
 
 class TaskProvider extends ChangeNotifier{
@@ -52,11 +50,12 @@ class TaskProvider extends ChangeNotifier{
     context.read<TaskCountProvider>().onTaskDelete(task);
   }
 
-  toggleCompleted(TaskModel task){
-    for(var t in _tasks){
-      if(task.id == t.id){
-        task = task.copyWith(completed: !t.completed);
-      }
-    }
+  updateTask({
+    required BuildContext context,
+    required TaskModel task,
+  }) {
+    int index = _tasks.indexWhere((t)=> t.id == task.id);
+    _tasks[index] = task.copyWith(completed: !_tasks[index].completed);
+    context.read<TaskCountProvider>().onCompleteTaskToggle(_tasks[index]);
   }
 }

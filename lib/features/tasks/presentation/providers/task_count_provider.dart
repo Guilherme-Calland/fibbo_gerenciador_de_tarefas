@@ -6,6 +6,7 @@ class TaskCountProvider extends ChangeNotifier{
   int get taskCount => _taskCount;
 
   int _completedTaskCount = 0;
+
   int get completedTaskCount => _completedTaskCount;
 
   void onTaskDelete(TaskModel task){
@@ -23,6 +24,15 @@ class TaskCountProvider extends ChangeNotifier{
   void onTasksLoad({required int taskCount, required int completedTaskCount}) {
     _taskCount = taskCount;
     _completedTaskCount = completedTaskCount;
+    _updateScreen();
+  }
+
+  void onCompleteTaskToggle(TaskModel task) {
+    if(task.completed){
+      _completedTaskCount++;
+    }else{
+      _completedTaskCount--;
+    }
     _updateScreen();
   }
 }

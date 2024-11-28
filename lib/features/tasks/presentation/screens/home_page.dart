@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
-import 'package:gerenciador_de_tarefas/core/widgets/delete_icon.dart';
 import 'package:gerenciador_de_tarefas/core/widgets/loading_indicator.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_count_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
@@ -82,7 +81,9 @@ class HomePage extends StatelessWidget {
                             right: horizontalPadding,
                             top: 8.0
                           ),
-                          onCompleteToggle: (){},
+                          onCompleteToggle: () => provider.updateTask(
+                            context: context, task: model
+                          ),
                           onDeletePressed: () => provider.deleteTask(
                             context: context,
                             task: model,
