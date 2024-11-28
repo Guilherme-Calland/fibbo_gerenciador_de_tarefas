@@ -9,18 +9,23 @@ class WideButton extends StatelessWidget {
     required this.onTap,
     required this.color,
     this.transparentAndBordered = false,
+    this.height,
+    this.fontSize
   });
 
   final String label;
   final Function() onTap;
   final Color color;
   final bool transparentAndBordered;
+  final double? height;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        height: height,
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
         decoration:  BoxDecoration(
@@ -28,14 +33,16 @@ class WideButton extends StatelessWidget {
           borderRadius: AppDecorations.borderRadiusSmall,
           border: transparentAndBordered ? Border.all(color: color) : null
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: transparentAndBordered ? color : Colors.white,
-            fontSize: 18,
-            fontWeight: transparentAndBordered ? null : FontWeight.bold,
+        child: Center(
+          child: Text(
+            label,
+            style: TextStyle(
+              color: transparentAndBordered ? color : Colors.white,
+              fontSize: fontSize ?? 18,
+              fontWeight: transparentAndBordered ? null : FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
         ),
       ),
     );
