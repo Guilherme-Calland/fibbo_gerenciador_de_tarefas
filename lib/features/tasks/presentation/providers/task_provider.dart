@@ -65,6 +65,8 @@ class TaskProvider extends ChangeNotifier{
 
     //fibbo
     _updateWidgetOnScreen();
+
+    context.read<TaskScrollProvider>().checkScrollExtent(context);
   }
 
   updateTask({
