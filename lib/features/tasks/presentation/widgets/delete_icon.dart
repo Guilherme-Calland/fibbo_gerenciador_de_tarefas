@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 
 class DeleteIcon extends StatelessWidget {

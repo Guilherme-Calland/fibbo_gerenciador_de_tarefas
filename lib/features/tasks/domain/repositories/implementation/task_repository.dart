@@ -19,7 +19,11 @@ class TaskRepository implements ITaskRepository{
   Future<Either<Exception, TaskPage>> getSampleTasks(TaskPageRequestDTO request) async{
     try{
       final response = await datasource.getSampleTasks(request);
-      final taskPage = TaskPage(tasks: response.tasks.map((dto) => TaskAdapter.fromDTO(dto)).toList(), isLastPage: response.isLastPage);
+      final taskPage = TaskPage(
+        tasks: response.tasks.map((dto) => TaskAdapter.fromDTO(dto)).toList(),
+        isLastPage: response.isLastPage,
+        total: response.total,
+      );
       return Right(taskPage);
     }catch(e){
       return Left(Exception('Repository Exception: $e'));

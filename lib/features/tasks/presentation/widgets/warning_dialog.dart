@@ -54,8 +54,11 @@ class WarningDialog extends StatelessWidget {
                   Expanded(
                     child: WideButton(
                       label: "OK",
-                      color: AppColors.webHighlight,
-                      onTap: onOkPressed,
+                      color: okButtonColor,
+                      onTap: (){
+                        Navigator.pop(context);
+                        onOkPressed();
+                      },
                     ),
                   ),
                 ],

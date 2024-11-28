@@ -55,7 +55,9 @@ class TaskScrollProvider extends ChangeNotifier{
       if(scrollConnected){
         bool pageCanScroll = taskScrollController.position.maxScrollExtent > 0;
         if(!pageCanScroll){
-          _loadNewTaskPage(context);
+          if(context.mounted){
+            _loadNewTaskPage(context);
+          }
         }
       }
     }while(!scrollConnected);

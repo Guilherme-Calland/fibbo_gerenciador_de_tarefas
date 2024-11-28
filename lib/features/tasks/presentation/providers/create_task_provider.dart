@@ -1,5 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:gerenciador_de_tarefas/core/enums/priority.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
+import 'package:provider/provider.dart';
 
 class CreateTaskProvider extends ChangeNotifier{
   final _titleController = TextEditingController();
@@ -23,6 +26,28 @@ class CreateTaskProvider extends ChangeNotifier{
 
   void onPriorityChanged(TaskPriority? value) {
     _priority = value!;
+    _updateWidgetsOnScreen();
+  }
+
+  createTask(BuildContext context) {
+    _titleError = _titleController.text.isEmpty;
+
+    bool validFields = !_titleError;
+    if(!validFields){
+      final int newTaskId = context.read<TaskProvider>().totalTasks + 1;
+      final newTask = TaskModel(
+        id: newTaskId,
+        title: _titleController.text,
+        description: _descriptionController.text.isEmpty ? null : _descriptionController.text,
+        priority: priority,
+      );
+
+      
+    }
+    _updateWidgetsOnScreen();
+  }
+
+  void _updateWidgetsOnScreen(){
     notifyListeners();
   }
 }

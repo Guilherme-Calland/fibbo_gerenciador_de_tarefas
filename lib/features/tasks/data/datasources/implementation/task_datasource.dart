@@ -28,6 +28,7 @@ class TaskDatasource implements ITaskDatasource{
           return TaskAdapter.fromJson(json);
         }).toList(),
         isLastPage: totalItems <= maxNumItemsFetched,
+        total: totalItems
       );
     }else{
       throw Exception("Error from server, response: ${response.data}");

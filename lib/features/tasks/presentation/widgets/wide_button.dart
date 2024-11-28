@@ -10,7 +10,7 @@ class WideButton extends StatelessWidget {
     required this.color,
     this.transparentAndBordered = false,
     this.height,
-    this.fontSize
+    this.fontSize,
   });
 
   final String label;

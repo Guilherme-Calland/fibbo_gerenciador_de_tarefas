@@ -64,27 +64,28 @@ class HomePage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final model = taskProvider.tasks[index];
                     const horizontalPadding = 16.0;
-                    final firstItem = index == 0;
+                    //fibbo
+                    // final firstItem = index == 0; 
                     final lastItem = index == taskProvider.tasks.length - 1;
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (firstItem)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 24.0),
-                              // fibbo, remove isso aqui, 
-                              // Consumer<TaskCountProvider>(
-                              //   builder: (context, countProvider, _) {
-                              //     return CompletedTasksWidget(
-                              //       taskCount: countProvider.taskCount,
-                              //       completedTasks: countProvider.completedTaskCount,
-                              //     );
-                              //   }
-                              // ),
-                            ],
-                          ),
+                        // if (firstItem)
+                        //   Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     children: [
+                        //       SizedBox(height: 24.0),
+                        //       // fibbo, remove isso aqui, 
+                        //       // Consumer<TaskCountProvider>(
+                        //       //   builder: (context, countProvider, _) {
+                        //       //     return CompletedTasksWidget(
+                        //       //       taskCount: countProvider.taskCount,
+                        //       //       completedTasks: countProvider.completedTaskCount,
+                        //       //     );
+                        //       //   }
+                        //       // ),
+                        //     ],
+                        //   ),
                         TaskCard(
                           model,
                           padding: const EdgeInsets.only(
@@ -138,7 +139,14 @@ class HomePage extends StatelessWidget {
                       onTap: () => taskProvider.refreshSamplePage(context),
                       label: "Load sample tasks from the internet",
                       color: AppColors.webHighlight,
-                    )
+                    ),
+                    LabeledButton(
+                      active: !taskProvider.loading,
+                      icon: Icons.delete,
+                      onTap: () => taskProvider.deleteAllTasks(context),
+                      label: "Delete all tasks",
+                      color: AppColors.deleteHighlight,
+                    ),
                   ],
                 ),
               )

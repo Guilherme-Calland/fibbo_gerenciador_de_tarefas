@@ -62,10 +62,10 @@ class CreateTaskPage extends StatelessWidget {
                     height: 56,
                     fontSize: 24,
                     label: task == null ? 'Add' : 'Edit',
-                    onTap: () {},
+                    onTap: () => provider.createTask(context),
                     color: AppColors.addHighlight,
                   )
-              ],
+                ],
               ),
             );
           }

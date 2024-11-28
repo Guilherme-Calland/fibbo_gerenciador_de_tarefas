@@ -9,8 +9,8 @@ class GetSampleTasksUsecase extends Usecase<TaskPage, TaskPageRequestDTO>{
   GetSampleTasksUsecase(this.repository);
 
   @override
-  Future<Either<Exception, TaskPage>> call(TaskPageRequestDTO dto) async{
-    return await repository.getSampleTasks(dto);
+  Future<Either<Exception, TaskPage>> call(TaskPageRequestDTO params) async{
+    return await repository.getSampleTasks(params);
   }
   
 }

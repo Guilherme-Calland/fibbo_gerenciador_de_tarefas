@@ -30,6 +30,9 @@ class TaskProvider extends ChangeNotifier{
 
   final int _pageSize = 10;
 
+  int _totalTasks = 0;
+  int get totalTasks => _totalTasks;
+
   Future<bool> _getSampleTasks({
     required BuildContext context,
   }) async {
@@ -45,6 +48,7 @@ class TaskProvider extends ChangeNotifier{
         _error = true;
       },
       (taskPageResult) {
+        _totalTasks = taskPageResult.total;
         _tasks.addAll(taskPageResult.tasks);
         isLastPage = taskPageResult.isLastPage;
         _currentPage++;
@@ -55,9 +59,9 @@ class TaskProvider extends ChangeNotifier{
   }
 
   deleteTask({required BuildContext context,required TaskModel task}) {
+    _totalTasks--;
     _tasks.remove(task);
     _updateWidgetOnScreen();
-
     context.read<TaskScrollProvider>().checkScrollExtent(context);
   }
 
@@ -86,35 +90,59 @@ class TaskProvider extends ChangeNotifier{
     _currentPage = 1;
     _tasks.clear();
     _error = false;
+    _totalTasks = 0;
   }
 
-  void refreshSamplePage(BuildContext backgroundPageContext){
-    showDialog(context: backgroundPageContext, builder: (dialogContext){
-      return Scaffold(
-        backgroundColor: Colors.black.withOpacity(0.0),
-        body: Center(
-          child: WarningDialog(
-            title: 'If you proceed, all current tasks will be deleted. This action cannot be undone.',
-            onOkPressed: () => _onRefreshConfirm(
-              backgroundPageContext: backgroundPageContext,
-              dialogContext: dialogContext,
-            ),
-            okButtonColor: AppColors.webHighlight,
-          ),
-        ),
-      );
-    });
+  void refreshSamplePage(BuildContext context){
+    _showWarningDialog(
+      context: context,
+      text: 'If you proceed, all current tasks will be deleted. This action cannot be undone.',
+      onOkPressed: (dialogContext) => _onRefreshConfirm(
+        context,
+      ),
+      okButtonColor: AppColors.deleteHighlight
+    );
   }
 
-  void _onRefreshConfirm({
-    required BuildContext backgroundPageContext,
-    required BuildContext dialogContext,
+  Future<void> _showWarningDialog({
+    required BuildContext context,
+    required String text,
+    required Function(BuildContext) onOkPressed,
+    required Color okButtonColor
   }) {
+    return showDialog(context: context, builder: (dialogContext){
+    return Scaffold(
+      backgroundColor: Colors.black.withOpacity(0.0),
+      body: Center(
+        child: WarningDialog(
+          title: text,
+          onOkPressed: ()=> onOkPressed(dialogContext),
+          okButtonColor: okButtonColor,
+        ),
+      ),
+    );
+  });
+  }
+
+  void _onRefreshConfirm(
+     BuildContext context,
+  ) {
     _clear();
     _loading = true;
     _updateWidgetOnScreen();
+    getFirstSamplePage(context);
+  }
 
-    Navigator.pop(dialogContext);
-    getFirstSamplePage(backgroundPageContext);
+  deleteAllTasks(BuildContext context) {
+    _showWarningDialog(
+      context: context,
+      text: 'This action will delete all your tasks. This action cannot be undone.',
+      onOkPressed: (dialogContext){
+        _tasks.clear();
+        _updateWidgetOnScreen();
+      },
+      okButtonColor: AppColors.deleteHighlight
+    );
+    
   }
 }
