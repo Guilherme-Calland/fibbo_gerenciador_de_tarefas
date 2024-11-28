@@ -24,7 +24,6 @@ class TaskCard extends StatefulWidget {
 class _TaskWidgetState extends State<TaskCard> {
 
   bool completed = false;
-  bool deleted = false;
 
   @override
   void initState() {
@@ -34,8 +33,7 @@ class _TaskWidgetState extends State<TaskCard> {
 
   @override
   Widget build(BuildContext context) {
-    return deleted ? const SizedBox.shrink() : 
-    Padding(
+    return Padding(
       padding: widget.padding == null ? EdgeInsets.zero : widget.padding!,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,9 +101,6 @@ class _TaskWidgetState extends State<TaskCard> {
           ),
           const SizedBox(width: 8.0),
           DeleteIcon(onTap: (){
-            setState(() {
-              deleted = true;
-            });
             widget.onDeletePressed();
           },)
         ],

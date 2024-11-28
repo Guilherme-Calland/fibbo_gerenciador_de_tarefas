@@ -30,7 +30,7 @@ class TaskProvider extends ChangeNotifier{
   Future<bool> _getSampleTasks({
     required BuildContext context,
   }) async {
-    final params = TaskPageRequestDTO(pageNumber: currentPage, pageSize: 10);
+    final params = TaskPageRequestDTO(pageNumber: currentPage, pageSize: 30);
     final result = await _getSampleTasksUsecase(params);
     bool isLastPage = false;
     result.fold(
@@ -62,6 +62,9 @@ class TaskProvider extends ChangeNotifier{
   deleteTask({required BuildContext context,required TaskModel task}) {
     _tasks.remove(task);
     context.read<TaskCountProvider>().onTaskDelete(task);
+
+    //fibbo
+    _updateWidgetOnScreen();
   }
 
   updateTask({
