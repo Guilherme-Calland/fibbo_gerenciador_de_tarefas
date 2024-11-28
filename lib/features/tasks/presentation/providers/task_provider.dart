@@ -30,7 +30,7 @@ class TaskProvider extends ChangeNotifier{
   Future<bool> _getSampleTasks({
     required BuildContext context,
   }) async {
-    final params = TaskPageRequestDTO(pageNumber: currentPage, pageSize: 30);
+    final params = TaskPageRequestDTO(pageNumber: currentPage, pageSize: 10);
     final result = await _getSampleTasksUsecase(params);
     bool isLastPage = false;
     result.fold(
