@@ -50,8 +50,11 @@ class TaskProvider extends ChangeNotifier{
       (taskPageResult) {
         _totalTasks = taskPageResult.total;
         _tasks.addAll(taskPageResult.tasks);
-        isLastPage = taskPageResult.isLastPage;
+
+        int maxNumItemsFetched = _currentPage * _pageSize;
+        isLastPage = taskPageResult.total <= maxNumItemsFetched;
         _currentPage++;
+
       },
     );
 

@@ -21,7 +21,6 @@ class TaskRepository implements ITaskRepository{
       final response = await datasource.getSampleTasks(request);
       final taskPage = TaskPage(
         tasks: response.tasks.map((dto) => TaskAdapter.fromDTO(dto)).toList(),
-        isLastPage: response.isLastPage,
         total: response.total,
       );
       return Right(taskPage);

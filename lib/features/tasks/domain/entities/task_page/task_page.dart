@@ -10,19 +10,14 @@ class TaskPage{
   final List<TaskModel> tasks;
 
   @HiveField(1)
-  final bool isLastPage;
-
-  @HiveField(2)
   final int total;
 
   const TaskPage({
     required this.tasks,
-    required this.isLastPage,
     required this.total
   });
 
-  TaskPage.empty()
-    : isLastPage = false,
+  TaskPage.empty() :
     tasks = const [TaskModel.empty()],
     total = 1;
 }

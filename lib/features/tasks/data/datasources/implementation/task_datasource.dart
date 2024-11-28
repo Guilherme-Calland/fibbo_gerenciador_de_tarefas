@@ -21,14 +21,12 @@ class TaskDatasource implements ITaskDatasource{
     final response = await apiClient.get(url);
     bool success = response.statusCode == 200;
     if(success){
-      int totalItems = response.data!["total"];
-      int maxNumItemsFetched = dto.pageNumber * dto.pageSize;
+
       return TaskPageResponseDTO(
         tasks: (response.data!["todos"] as List).map((json){
           return TaskAdapter.fromJson(json);
         }).toList(),
-        isLastPage: totalItems <= maxNumItemsFetched,
-        total: totalItems
+        total: response.data!["total"]
       );
     }else{
       throw Exception("Error from server, response: ${response.data}");

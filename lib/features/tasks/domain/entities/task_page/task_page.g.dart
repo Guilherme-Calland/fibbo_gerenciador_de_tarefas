@@ -18,20 +18,17 @@ class TaskPageAdapter extends TypeAdapter<TaskPage> {
     };
     return TaskPage(
       tasks: (fields[0] as List).cast<TaskModel>(),
-      isLastPage: fields[1] as bool,
-      total: fields[2] as int,
+      total: fields[1] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, TaskPage obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(2)
       ..writeByte(0)
       ..write(obj.tasks)
       ..writeByte(1)
-      ..write(obj.isLastPage)
-      ..writeByte(2)
       ..write(obj.total);
   }
 
