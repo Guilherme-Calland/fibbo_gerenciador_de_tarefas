@@ -1,6 +1,10 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample_tasks_usecase.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_count_provider.dart';
+import 'package:gerenciador_de_tarefas/main.dart';
+import 'package:provider/provider.dart';
 
 class TaskProvider extends ChangeNotifier{
   final GetSampleTasksUsecase _getSampleTasksUsecase;
@@ -15,43 +19,44 @@ class TaskProvider extends ChangeNotifier{
   final List<TaskModel> _tasks = [];
   List<TaskModel> get tasks => _tasks;
 
-  int _completedTaskCount = 0;
-  int get completedTaskCount => _completedTaskCount;
-
   void updateScreen(){
     notifyListeners();
   }
 
-  Future<void> getSampleTasks()async{
+  Future<void> getSampleTasks(BuildContext context) async {
     final result = await _getSampleTasksUsecase();
-    result.fold((error){
-      debugPrint('$error');
-      _error = true;
-    }, (tasksResult){
-      for (var task in tasksResult) {
-        _tasks.add(task);        
-        if(task.completed) _completedTaskCount++;
-      }
-    });
+    result.fold(
+      (error) {
+        debugPrint('$error');
+        _error = true;
+      },
+      (tasksResult) {
+        int completedTaskCount = 0;
+        for (var task in tasksResult) {
+          _tasks.add(task);
+          if (task.completed) {
+            completedTaskCount++;
+          }
+        }
+
+        context.read<TaskCountProvider>().onTasksLoad(
+          taskCount: _tasks.length,
+          completedTaskCount: completedTaskCount,
+        );
+      },
+    );
   }
 
-  deleteTask(int id) {
-    for(var task in _tasks){
-      if(task.id == id){
-        _tasks.remove(task);
-        if(task.completed){
-          _completedTaskCount--;
-        }
-      }
-    }
-    _tasks.removeWhere((task) => task.id == id);
+  deleteTask({required BuildContext context,required TaskModel task}) {
+    _tasks.remove(task);
+    context.read<TaskCountProvider>().onTaskDelete(task);
   }
 
   toggleCompleted(TaskModel task){
-    // for(var t in _tasks){
-    //   if(task.id == t.id){
-    //     task.completed = !t.completed;
-    //   }
-    // }
+    for(var t in _tasks){
+      if(task.id == t.id){
+        task = task.copyWith(completed: !t.completed);
+      }
+    }
   }
 }

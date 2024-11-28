@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/widgets/delete_icon.dart';
 import 'package:gerenciador_de_tarefas/core/widgets/loading_indicator.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_count_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/completed_tasks_widget.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/create_task_suggestion_button.dart';
@@ -64,9 +65,13 @@ class HomePage extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CompletedTasksWidget(
-                                taskCount: provider.tasks.length,
-                                completedTasks: provider.completedTaskCount,
+                              Consumer<TaskCountProvider>(
+                                builder: (context, provider, _) {
+                                  return CompletedTasksWidget(
+                                    taskCount: provider.taskCount,
+                                    completedTasks: provider.completedTaskCount,
+                                  );
+                                }
                               ),
                             ],
                           ),
@@ -78,7 +83,10 @@ class HomePage extends StatelessWidget {
                             top: 8.0
                           ),
                           onCompleteToggle: (){},
-                          onDeletePressed: ()=> provider.deleteTask(model.id!),
+                          onDeletePressed: () => provider.deleteTask(
+                            context: context,
+                            task: model,
+                          ),
                         ),
                       ],
                     );
@@ -117,7 +125,7 @@ class HomePage extends StatelessWidget {
 
   Future<void> _getSampleTasks(BuildContext context) async {
     final provider = context.read<TaskProvider>();
-    await provider.getSampleTasks();
+    await provider.getSampleTasks(context);
     provider.loading = false;
     provider.updateScreen();
   }

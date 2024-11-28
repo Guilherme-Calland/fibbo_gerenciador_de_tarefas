@@ -25,4 +25,20 @@ class TaskModel extends Equatable{
     description = null,
     completed = false,
     priority = TaskPriority.low;
+  
+  TaskModel copyWith({
+    String? title,
+    String? description,
+    bool? completed,
+    TaskPriority? priority,
+  }) {
+    return TaskModel(
+      id: id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      completed: completed ?? this.completed,
+      priority: priority ?? this.priority,
+    );
+  }
+
 }
