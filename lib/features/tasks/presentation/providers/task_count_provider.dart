@@ -14,17 +14,17 @@ class TaskCountProvider extends ChangeNotifier{
     if(task.completed){
       _completedTaskCount--;
     }
-    _updateScreen();
+    _updateWidget();
   }
 
-  void _updateScreen(){
+  void _updateWidget(){
     notifyListeners();
   }
 
   void onTasksLoad({required int taskCount, required int completedTaskCount}) {
     _taskCount = taskCount;
     _completedTaskCount = completedTaskCount;
-    _updateScreen();
+    _updateWidget();
   }
 
   void onCompleteTaskToggle(TaskModel task) {
@@ -33,6 +33,6 @@ class TaskCountProvider extends ChangeNotifier{
     }else{
       _completedTaskCount--;
     }
-    _updateScreen();
+    _updateWidget();
   }
 }

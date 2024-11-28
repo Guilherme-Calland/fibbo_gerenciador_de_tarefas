@@ -10,7 +10,8 @@ class TaskProvider extends ChangeNotifier{
   TaskProvider({required GetSampleTasksUsecase getSampleTasksUsecase})
     : _getSampleTasksUsecase = getSampleTasksUsecase;
 
-  bool loading = true;
+  bool _loading = true;
+  bool get loading => _loading;
 
   bool _error = false;
   bool get error => _error;
@@ -18,20 +19,26 @@ class TaskProvider extends ChangeNotifier{
   final List<TaskModel> _tasks = [];
   List<TaskModel> get tasks => _tasks;
 
-  void updateScreen(){
+  void _updateWidgetOnScreen(){
     notifyListeners();
   }
 
-  Future<void> getSampleTasks(BuildContext context) async {
+  int _currentPage = 1;
+  int get currentPage => _currentPage;
 
-    final params = TaskPageRequestDTO(pageNumber: 1, pageSize: 10);
+  Future<bool> _getSampleTasks({
+    required BuildContext context,
+  }) async {
+    final params = TaskPageRequestDTO(pageNumber: currentPage, pageSize: 100);
     final result = await _getSampleTasksUsecase(params);
+    bool isLastPage = false;
     result.fold(
       (error) {
         debugPrint('$error');
         _error = true;
       },
       (taskPageResult) {
+        _currentPage++;
         int completedTaskCount = 0;
         for (var task in taskPageResult.tasks) {
           _tasks.add(task);
@@ -44,8 +51,14 @@ class TaskProvider extends ChangeNotifier{
           taskCount: _tasks.length,
           completedTaskCount: completedTaskCount,
         );
+
+        debugPrint('\n${tasks.length}, ${taskPageResult.isLastPage}, fibbo\n');
+
+        isLastPage = taskPageResult.isLastPage;
       },
     );
+
+    return isLastPage;
   }
 
   deleteTask({required BuildContext context,required TaskModel task}) {
@@ -60,5 +73,18 @@ class TaskProvider extends ChangeNotifier{
     int index = _tasks.indexWhere((t)=> t.id == task.id);
     _tasks[index] = task.copyWith(completed: !_tasks[index].completed);
     context.read<TaskCountProvider>().onCompleteTaskToggle(_tasks[index]);
+  }
+
+  Future<bool> fetchNewTaskPage(BuildContext context) async{
+    _error = false;
+    bool isLastPage = await _getSampleTasks(context: context);
+    _updateWidgetOnScreen();
+    return isLastPage;
+  }
+
+  Future<void> getFirstSamplePage(BuildContext context) async {
+    await _getSampleTasks(context: context);
+    _loading = false;
+    _updateWidgetOnScreen();
   }
 }

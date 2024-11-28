@@ -3,6 +3,7 @@ import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/widgets/loading_indicator.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_count_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_scroll_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/completed_tasks_widget.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/create_task_suggestion_button.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/labeled_button.dart';
@@ -13,7 +14,12 @@ import 'package:provider/provider.dart';
 class HomePage extends StatelessWidget {
   HomePage(BuildContext context, {super.key}) {
     WidgetsBinding.instance
-        .addPostFrameCallback((_) => _getSampleTasks(context));
+        .addPostFrameCallback((_)async{
+          await _getSampleTasks(context);
+          if(context.mounted){
+            context.read<TaskScrollProvider>().addScrollListener(context);
+          }
+        });
   }
 
   @override
@@ -34,29 +40,31 @@ class HomePage extends StatelessWidget {
         ),
       ),
       body: Consumer<TaskProvider>(
-        builder: (context, provider, _) {
+        builder: (context, taskProvider, _) {
           return Stack(
             alignment: Alignment.bottomRight,
             children: [
-              if (provider.loading)
+              if (taskProvider.loading)
                 const Center(
                   child: LoadingIndicator(),
                 )
-              else if (provider.error)
+              else if (taskProvider.error)
                 const Center(
                   child: Text("Something is wrong"),
                 )
-              else if (provider.tasks.isEmpty)
+              else if (taskProvider.tasks.isEmpty)
                 const Center(
                   child: CreateTaskSuggestionButton(),
                 )
               else
                 ListView.builder(
-                  itemCount: provider.tasks.length,
+                  controller: context.read<TaskScrollProvider>().taskScrollController,
+                  itemCount: taskProvider.tasks.length,
                   itemBuilder: (context, index) {
-                    final model = provider.tasks[index];
+                    final model = taskProvider.tasks[index];
                     const horizontalPadding = 16.0;
                     final firstItem = index == 0;
+                    final lastItem = index == taskProvider.tasks.length - 1;
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -65,10 +73,10 @@ class HomePage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Consumer<TaskCountProvider>(
-                                builder: (context, provider, _) {
+                                builder: (context, countProvider, _) {
                                   return CompletedTasksWidget(
-                                    taskCount: provider.taskCount,
-                                    completedTasks: provider.completedTaskCount,
+                                    taskCount: countProvider.taskCount,
+                                    completedTasks: countProvider.completedTaskCount,
                                   );
                                 }
                               ),
@@ -81,14 +89,29 @@ class HomePage extends StatelessWidget {
                             right: horizontalPadding,
                             top: 8.0
                           ),
-                          onCompleteToggle: () => provider.updateTask(
+                          onCompleteToggle: () => taskProvider.updateTask(
                             context: context, task: model
                           ),
-                          onDeletePressed: () => provider.deleteTask(
+                          onDeletePressed: () => taskProvider.deleteTask(
                             context: context,
                             task: model,
                           ),
                         ),
+
+                        if(lastItem)
+                        Consumer<TaskScrollProvider>(builder: (context, scrollProvider, child){
+                          return SizedBox(
+                            height: 100,
+                            width: double.infinity,
+                            child: Visibility(
+                              visible: scrollProvider.scrolling,
+                              child: const Center(
+                                child: LoadingIndicator(),
+                              ),
+                            ),
+                          );
+                        })
+                        
                       ],
                     );
                   },
@@ -97,18 +120,18 @@ class HomePage extends StatelessWidget {
                 right: 16,
                 bottom: 32,
                 child: MenuButton(
-                  active: !provider.loading,
+                  active: !taskProvider.loading,
                   icon: Icons.menu,
                   actionButtons: [
                     LabeledButton(
-                      active: !provider.loading,
+                      active: !taskProvider.loading,
                       icon: Icons.add,
                       onTap: () {},
                       label: "Create new task",
                       color: AppColors.addHighlight,
                     ),
                     LabeledButton(
-                      active: !provider.loading,
+                      active: !taskProvider.loading,
                       icon: Icons.cloud_outlined,
                       onTap: () {},
                       label: "Load sample tasks from the internet",
@@ -125,10 +148,7 @@ class HomePage extends StatelessWidget {
   }
 
   Future<void> _getSampleTasks(BuildContext context) async {
-    final provider = context.read<TaskProvider>();
-    await provider.getSampleTasks(context);
-    provider.loading = false;
-    provider.updateScreen();
+    await context.read<TaskProvider>().getFirstSamplePage(context);
   }
 }
 

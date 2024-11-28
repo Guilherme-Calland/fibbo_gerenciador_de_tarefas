@@ -4,6 +4,7 @@ import 'package:gerenciador_de_tarefas/features/tasks/domain/repositories/implem
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample_tasks_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_count_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_scroll_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -21,6 +22,9 @@ class AppProvider{
     }),
     ChangeNotifierProvider<TaskCountProvider>(create: (_){
       return TaskCountProvider();
+    }),
+    ChangeNotifierProvider<TaskScrollProvider>(create: (_){
+      return TaskScrollProvider();
     })
   ];
 }
