@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gerenciador_de_tarefas/core/usecase/usecase.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/data/dto/request/task_request_dto.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task_page.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample_tasks_usecase.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -16,16 +16,18 @@ void main() {
     usecase = GetSampleTasksUsecase(repository);
   });
 
-  const tResponse = [TaskModel.empty()];
+  final tResponse = TaskPage.empty();
+  final tParams = TaskPageRequestDTO(pageNumber: 10, pageSize: 1);
 
   test("should call [TaskRepository.getSampleTasks]", ()async{
-    when(()=> repository.getSampleTasks())
-    .thenAnswer((_)async=> const Right(tResponse));
 
-    final result = await usecase(const NoParams());
+    when(()=> repository.getSampleTasks(tParams))
+    .thenAnswer((_)async=> Right(tResponse));
 
-    expect(result, equals(const Right<dynamic, List<TaskModel>>(tResponse)));
-    verify(()=> repository.getSampleTasks()).called(1);
+    final result = await usecase(tParams);
+
+    expect(result, equals(Right<dynamic, TaskPage>(tResponse)));
+    verify(()=> repository.getSampleTasks(tParams)).called(1);
     verifyNoMoreInteractions(repository);
   });
 }

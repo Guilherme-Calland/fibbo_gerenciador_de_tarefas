@@ -1,7 +1,8 @@
 import 'package:gerenciador_de_tarefas/core/network/api_client.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/data/adapters/task_adapter.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/data/datasources/i_task_datasource.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/data/dto/task_response_dto.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/data/dto/request/task_request_dto.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/data/dto/response/task_response_page_dto.dart';
 
 class TaskDatasource implements ITaskDatasource{
   TaskDatasource._(this.apiClient);
@@ -15,12 +16,19 @@ class TaskDatasource implements ITaskDatasource{
   }
 
   @override
-  Future<List<TaskResponseDTO>> getSampleTasks() async {
-    const String url = 'https://dummyjson.com/todos?limit=100';
+  Future<TaskPageResponseDTO> getSampleTasks(TaskPageRequestDTO dto) async {
+    final String url = 'https://dummyjson.com/todos?limit=${dto.pageSize}&skip=${dto.pageSize * (dto.pageNumber - 1)}';
     final response = await apiClient.get(url);
     bool success = response.statusCode == 200;
     if(success){
-      return (response.data!["todos"] as List).map((json)=> TaskAdapter.fromJson(json)).toList();
+      int totalItems = response.data!["total"];
+      int maxNumItemsFetched = dto.pageNumber * dto.pageSize;
+      return TaskPageResponseDTO(
+        tasks: (response.data!["todos"] as List).map((json){
+          return TaskAdapter.fromJson(json);
+        }).toList(),
+        isLastPage: totalItems <= maxNumItemsFetched,
+      );
     }else{
       throw Exception("Error from server, response: ${response.data}");
     }

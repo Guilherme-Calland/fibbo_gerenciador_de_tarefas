@@ -1,5 +1,5 @@
 import 'package:gerenciador_de_tarefas/core/enums/priority.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/data/dto/task_response_dto.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/data/dto/response/task_response_dto.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 
 class TaskAdapter{
