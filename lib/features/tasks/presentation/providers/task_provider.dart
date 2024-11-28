@@ -3,6 +3,7 @@ import 'package:gerenciador_de_tarefas/features/tasks/data/dto/request/task_requ
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample_tasks_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_count_provider.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_scroll_provider.dart';
 import 'package:provider/provider.dart';
 
 class TaskProvider extends ChangeNotifier{
@@ -29,7 +30,7 @@ class TaskProvider extends ChangeNotifier{
   Future<bool> _getSampleTasks({
     required BuildContext context,
   }) async {
-    final params = TaskPageRequestDTO(pageNumber: currentPage, pageSize: 100);
+    final params = TaskPageRequestDTO(pageNumber: currentPage, pageSize: 10);
     final result = await _getSampleTasksUsecase(params);
     bool isLastPage = false;
     result.fold(
@@ -51,9 +52,6 @@ class TaskProvider extends ChangeNotifier{
           taskCount: _tasks.length,
           completedTaskCount: completedTaskCount,
         );
-
-        debugPrint('\n${tasks.length}, ${taskPageResult.isLastPage}, fibbo\n');
-
         isLastPage = taskPageResult.isLastPage;
       },
     );

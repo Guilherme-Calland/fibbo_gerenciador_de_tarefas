@@ -18,6 +18,10 @@ class HomePage extends StatelessWidget {
           await _getSampleTasks(context);
           if(context.mounted){
             context.read<TaskScrollProvider>().addScrollListener(context);
+            if(context.mounted){
+              context.read<TaskScrollProvider>().checkScrollExtent(context);
+            }
+            
           }
         });
   }

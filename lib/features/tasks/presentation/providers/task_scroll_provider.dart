@@ -22,18 +22,42 @@ class TaskScrollProvider extends ChangeNotifier{
       bool endOfPage = _taskScrollController.position.pixels == _taskScrollController.position.maxScrollExtent;
       debugPrint("fibbo, endOfPage: $endOfPage");
       if(endOfPage){
-        _scrolling = true;
-        _updateWidgetOnScreen();
-
-        _lastPage = await context.read<TaskProvider>().fetchNewTaskPage(context);
-        _scrolling = false;
-        
-        _updateWidgetOnScreen();
+        await _loadNewTaskPage(context);
       }
     });
   }
 
+  Future<void> _loadNewTaskPage(BuildContext context) async {
+    _scrolling = true;
+    _updateWidgetOnScreen();
+    
+    _lastPage = await context.read<TaskProvider>().fetchNewTaskPage(context);
+    _scrolling = false;
+    
+    _updateWidgetOnScreen();
+
+    if(context.mounted){
+      checkScrollExtent(context);
+    }
+  }
+
   void _updateWidgetOnScreen(){
     notifyListeners();
+  }
+
+  // check if item extent goes to end of the screen, if not, load more
+  // items if there are items left to load
+  void checkScrollExtent(BuildContext context) async{
+    late bool scrollConnected = false;
+    do{
+      await Future.delayed(const Duration(milliseconds: 50));
+      scrollConnected = taskScrollController.positions.isNotEmpty;
+      if(scrollConnected){
+        bool pageCanScroll = taskScrollController.position.maxScrollExtent > 0;
+        if(!pageCanScroll){
+          _loadNewTaskPage(context);
+        }
+      }
+    }while(!scrollConnected);
   }
 }
