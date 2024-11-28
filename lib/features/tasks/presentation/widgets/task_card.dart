@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/constants/decorations.dart';
-import 'package:gerenciador_de_tarefas/core/widgets/checkbox.dart';
-import 'package:gerenciador_de_tarefas/core/widgets/delete_icon.dart';
-import 'package:gerenciador_de_tarefas/core/widgets/priority_widget.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/checkbox.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/delete_icon.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/priority_widget.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 
 class TaskCard extends StatefulWidget {

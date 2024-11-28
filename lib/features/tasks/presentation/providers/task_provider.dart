@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
-import 'package:gerenciador_de_tarefas/core/widgets/warning_dialog.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/warning_dialog.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/data/dto/request/task_request_dto.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample_tasks_usecase.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_count_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_scroll_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -46,20 +45,9 @@ class TaskProvider extends ChangeNotifier{
         _error = true;
       },
       (taskPageResult) {
-        _currentPage++;
-        int completedTaskCount = 0;
-        for (var task in taskPageResult.tasks) {
-          _tasks.add(task);
-          if (task.completed) {
-            completedTaskCount++;
-          }
-        }
-
-        context.read<TaskCountProvider>().onTasksLoad(
-          taskCount: _tasks.length,
-          completedTaskCount: completedTaskCount,
-        );
+        _tasks.addAll(taskPageResult.tasks);
         isLastPage = taskPageResult.isLastPage;
+        _currentPage++;
       },
     );
 
@@ -68,7 +56,6 @@ class TaskProvider extends ChangeNotifier{
 
   deleteTask({required BuildContext context,required TaskModel task}) {
     _tasks.remove(task);
-    context.read<TaskCountProvider>().onTaskDelete(task);
     _updateWidgetOnScreen();
 
     context.read<TaskScrollProvider>().checkScrollExtent(context);
@@ -80,7 +67,6 @@ class TaskProvider extends ChangeNotifier{
   }) {
     int index = _tasks.indexWhere((t)=> t.id == task.id);
     _tasks[index] = task.copyWith(completed: !_tasks[index].completed);
-    context.read<TaskCountProvider>().onCompleteTaskToggle(_tasks[index]);
   }
 
   Future<bool> fetchNewTaskPage(BuildContext context) async{

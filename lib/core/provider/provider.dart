@@ -2,7 +2,7 @@ import 'package:gerenciador_de_tarefas/core/network/api_client.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/data/datasources/implementation/task_datasource.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/repositories/implementation/task_repository.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample_tasks_usecase.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_count_provider.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/create_task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_scroll_provider.dart';
 import 'package:provider/provider.dart';
@@ -20,11 +20,11 @@ class AppProvider{
       );
 
     }),
-    ChangeNotifierProvider<TaskCountProvider>(create: (_){
-      return TaskCountProvider();
-    }),
     ChangeNotifierProvider<TaskScrollProvider>(create: (_){
       return TaskScrollProvider();
-    })
+    }),
+    ChangeNotifierProvider<CreateTaskProvider>(create: (_){
+      return CreateTaskProvider();
+    }),
   ];
 }

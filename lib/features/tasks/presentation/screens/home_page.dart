@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
-import 'package:gerenciador_de_tarefas/core/widgets/loading_indicator.dart';
+import 'package:gerenciador_de_tarefas/core/constants/routes.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/loading_indicator.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_scroll_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/create_task_suggestion_button.dart';
@@ -26,8 +27,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    debugPrint("fibbo1517 building");
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
@@ -129,7 +128,7 @@ class HomePage extends StatelessWidget {
                     LabeledButton(
                       active: !taskProvider.loading,
                       icon: Icons.add,
-                      onTap: () {},
+                      onTap: () => _goToCreateTaskPage(context),
                       label: "Create new task",
                       color: AppColors.addHighlight,
                     ),
@@ -153,5 +152,7 @@ class HomePage extends StatelessWidget {
   Future<void> _getSampleTasks(BuildContext context) async {
     await context.read<TaskProvider>().getFirstSamplePage(context);
   }
+  
+  _goToCreateTaskPage(BuildContext context) => Navigator.pushNamed(context, AppRoutes.create);
 }
 

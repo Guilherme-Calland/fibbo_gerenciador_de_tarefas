@@ -12,8 +12,9 @@ class AppColors{
   static const priorityLow = Color.fromARGB(255, 64, 255, 70);
   static const priorityMedium = Color.fromARGB(255, 255, 149, 0);
   static const priorityHigh = Color.fromARGB(255, 216, 0, 0);
-
   static const secondaryText = Color.fromARGB(255, 33, 33, 33);
-
   static const backgroundIcon = Colors.grey;
+  static const borderColor = Colors.grey;
+
+  static const error = Color.fromARGB(255, 216, 0, 0);
 }
