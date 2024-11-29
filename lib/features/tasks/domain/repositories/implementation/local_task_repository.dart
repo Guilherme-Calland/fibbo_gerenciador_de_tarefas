@@ -48,5 +48,15 @@ class LocalTaskRepository implements ILocalTaskRepository{
       return Left(Exception(e));
     }
   }
+  
+  @override
+  Future<Either<Exception, bool>> deleteTask(int params) async{
+    try{
+      final result = await datasource.deleteTask(params);
+      return Right(result);
+    }catch(e){
+      return Left(Exception(e));
+    }
+  }
 
 }

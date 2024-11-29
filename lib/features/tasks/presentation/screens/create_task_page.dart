@@ -61,7 +61,6 @@ class CreateTaskPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 32.0),
                   WideButton(
-                    loading: provider.loading,
                     height: 56,
                     fontSize: 24,
                     label: task == null ? 'Add' : 'Edit',

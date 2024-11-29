@@ -46,8 +46,10 @@ class HomePage extends StatelessWidget {
                   child: Text("An error has occurred"),
                 )
               else if (taskProvider.tasks.isEmpty)
-                const Center(
-                  child: CreateTaskSuggestionButton(),
+                Center(
+                  child: CreateTaskSuggestionButton(
+                    onTap: () => _goToCreateTaskPage(context),
+                  ),
                 )
               else
                 ListView.builder(
@@ -67,7 +69,7 @@ class HomePage extends StatelessWidget {
                       ),
                       onDeletePressed: () => taskProvider.deleteTask(
                         context: context,
-                        task: model,
+                        index: index,
                       ),
                     );
                   },

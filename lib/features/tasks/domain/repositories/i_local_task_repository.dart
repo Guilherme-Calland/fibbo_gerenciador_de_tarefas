@@ -6,4 +6,5 @@ abstract class ILocalTaskRepository{
   Future<Either<Exception, bool>> saveTaskPage(List<TaskModel> params);
   Future<Either<Exception, List<TaskModel>>> getTaskPage();
   Future<Either<Exception, bool>> deleteAllTasks();
+  Future<Either<Exception, bool>> deleteTask(int params);
 }

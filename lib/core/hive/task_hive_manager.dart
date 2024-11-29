@@ -46,6 +46,16 @@ class TaskHiveManager{
     }
   }
 
+  Future<bool> deleteTask(int index) async {
+    try{
+      final box = await _initBox();
+      await box.deleteAt(index);
+      return true;
+    }catch(e){
+      throw Exception(e);
+    }
+  }
+
   Future<bool> deleteAllTasks()async{
     try{
       final box = await _initBox();

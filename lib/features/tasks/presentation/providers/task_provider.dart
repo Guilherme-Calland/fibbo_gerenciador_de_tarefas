@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/usecase/usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/delete_all_local_tasks_usecase.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/delete_local_task_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_local_task_page_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/save_local_task_page_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/warning_dialog.dart';
@@ -13,12 +14,14 @@ class TaskProvider extends ChangeNotifier{
   final SaveLocalTaskPageUsecase saveLocalTaskPageUsecase;
   final GetLocalTaskPageUsecase getLocalTaskPageUsecase;
   final DeleteAllLocalTasksUsecase deleteAllLocalTasksUsecase;
+  final DeleteLocalTaskUsecase deleteLocalTaskUsecase;
 
   TaskProvider({
     required this.getSampleTasksUsecase,
     required this.saveLocalTaskPageUsecase,
     required this.getLocalTaskPageUsecase,
     required this.deleteAllLocalTasksUsecase,
+    required this.deleteLocalTaskUsecase
   });
 
   bool _loading = true;
@@ -34,10 +37,7 @@ class TaskProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  final int _pageSize = 30;
-
   Future<void> _getSampleTasks() async {
-
     final result = await getSampleTasksUsecase(NoParams());
     result.fold(
       (error) {
@@ -45,8 +45,6 @@ class TaskProvider extends ChangeNotifier{
         _error = true;
       },
       (taskPageResult) async{
-        _currentTaskPage.clear();
-        _currentTaskPage.addAll(taskPageResult.tasks);
         _tasks.addAll(taskPageResult.tasks);
         _saveTaskPageInLocalStorage();
       },
@@ -54,9 +52,17 @@ class TaskProvider extends ChangeNotifier{
 
   }
 
-  deleteTask({required BuildContext context,required TaskModel task}) {
-    _tasks.remove(task);
+  deleteTask({required BuildContext context,required int index}) {
+    _tasks.removeAt(index);
     _updateWidgetOnScreen();
+    _deleteLocalTask(index);
+  }
+
+  Future<void> _deleteLocalTask(int index) async {
+    final result = await deleteLocalTaskUsecase.call(index);
+    result.fold((l){
+      debugPrint('$l');
+    }, (r){});
   }
 
   updateTask({
@@ -67,8 +73,6 @@ class TaskProvider extends ChangeNotifier{
     _tasks[index] = task.copyWith(completed: !_tasks[index].completed);
   }
 
-  final List<TaskModel> _currentTaskPage = [];
-
   Future<void> getSamplePage() async {
     await _getSampleTasks();
     _loading = false;
@@ -78,7 +82,6 @@ class TaskProvider extends ChangeNotifier{
   void _clear(){
     _tasks.clear();
     _error = false;
-    _currentTaskPage.clear();
   }
 
   void refreshSamplePage(BuildContext context){
@@ -173,5 +176,10 @@ class TaskProvider extends ChangeNotifier{
     result.fold((l){
       debugPrint('$l');
     }, (r){});
+  }
+
+  void addNewTask(TaskModel newTask) {
+    _tasks.add(newTask);
+    _updateWidgetOnScreen();
   }
 }
