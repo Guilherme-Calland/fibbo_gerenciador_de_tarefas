@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
+import 'package:gerenciador_de_tarefas/core/enums/priority/priority.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/create_task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/app_text_input_field.dart';
@@ -11,6 +12,7 @@ class CreateTaskPage extends StatelessWidget {
   CreateTaskPage(BuildContext context, {super.key, this.task}){
     final provider = context.read<CreateTaskProvider>();
     bool createingNewTask = task == null;
+
     if(createingNewTask){
       provider.clear();
     }else{
