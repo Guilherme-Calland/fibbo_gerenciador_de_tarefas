@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/constants/routes.dart';
-import 'package:gerenciador_de_tarefas/core/enums/complete_filter.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/create_task_provider.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/complete_filter_labels.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/loading_indicator.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/create_task_suggestion_button.dart';
@@ -42,11 +42,24 @@ class HomePage extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  CompleteFilterLabels(
-                    value: taskProvider.completeFilter,
-                    onSelected: (val){
-                      taskProvider.changeFilter(val);
-                    },
+                  const SizedBox(height: 24.0),
+                  Row(
+                    children: [
+                      CompleteFilterLabels(
+                        value: taskProvider.completeFilter,
+                        onSelected: (val){
+                          taskProvider.changeFilter(val);
+                        },
+                      ),
+                      const SizedBox(width: 4.0,),
+                      const Row(
+                        children: [
+                          Icon(Icons.tune, color: AppColors.secondaryText,),
+                          SizedBox(width: 4.0),
+                          Icon(Icons.keyboard_arrow_down, color: AppColors.secondaryText)
+                        ],
+                      ),
+                    ],
                   ),
                   Expanded(
                     child: (){
@@ -155,52 +168,3 @@ class HomePage extends StatelessWidget {
     context.read<TaskProvider>().getTasksFromLocalStorage();
   }
 }
-
-class CompleteFilterLabels extends StatelessWidget {
-  const CompleteFilterLabels({
-    super.key, this.value, required this.onSelected, 
-  });
-
-  final CompleteFilter? value;
-  final Function(CompleteFilter?) onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 24.0,),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-          children: List.generate(CompleteFilter.values.length, (index){
-            final filter = CompleteFilter.values[index];
-            final bool selected = value == filter;
-            return Row(
-              children: [
-                if(index != 0)
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                  height: 16,
-                  width: 1,
-                  color: AppColors.borderColor,
-                ),
-                GestureDetector(
-                  onTap: (){
-                    onSelected(filter);
-                  },
-                  child: Text(filter.label, style: TextStyle(
-                    fontSize: 16,
-                    color: selected ? AppColors.mainColorDark : AppColors.inactiveColor,
-                    fontWeight: selected ? FontWeight.bold : null
-                  ),),
-                ),
-              ],
-            );
-          },),
-        ),
-        ),
-      ],
-    );
-  }
-}
-
