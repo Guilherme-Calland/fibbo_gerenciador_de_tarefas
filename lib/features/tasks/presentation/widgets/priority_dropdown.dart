@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/constants/decorations.dart';
-import 'package:gerenciador_de_tarefas/core/enums/priority.dart';
+import 'package:gerenciador_de_tarefas/core/enums/priority/priority.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/priority_widget.dart';
 
 class ProrityDropdown extends StatelessWidget {

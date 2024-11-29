@@ -1,0 +1,3 @@
+enum DatasourceType{
+  localStorage, internet
+}

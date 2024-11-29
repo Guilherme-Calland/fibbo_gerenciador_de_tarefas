@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:gerenciador_de_tarefas/core/enums/priority.dart';
+import 'package:gerenciador_de_tarefas/core/enums/priority/priority.dart';
 import 'package:gerenciador_de_tarefas/core/hive/hive_manager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 part 'task.g.dart';

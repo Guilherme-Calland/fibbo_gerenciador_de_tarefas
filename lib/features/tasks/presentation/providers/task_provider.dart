@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/constants/local.dart';
+import 'package:gerenciador_de_tarefas/core/enums/datasource_type.dart';
 import 'package:gerenciador_de_tarefas/core/usecase/usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/delete_all_local_tasks_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_local_task_page_usecase.dart';
@@ -33,6 +34,8 @@ class TaskProvider extends ChangeNotifier{
 
   final List<TaskModel> _tasks = [];
   List<TaskModel> get tasks => _tasks;
+
+  DatasourceType _datasourceType = DatasourceType.localStorage;
 
   void _updateWidgetOnScreen(){
     notifyListeners();
@@ -95,10 +98,14 @@ class TaskProvider extends ChangeNotifier{
   final List<TaskModel> _currentTaskPage = [];
   Future<bool> fetchNewTaskPage(BuildContext context) async{
     _error = false;
-    bool isLastPage = await _getSampleTasks(context: context);
+    if(_datasourceType == DatasourceType.internet){
+      await _getSampleTasks(context: context);
+      await _saveTaskPageInLocalStorage();
+    }else{
+      await _getTasksFromLocalStorage();
+    }
     _updateWidgetOnScreen();
-    _saveTaskPageInLocalStorage();
-    return isLastPage;
+    return _tasks.length >= _totalTasks;
   }
 
   Future<void> getFirstSamplePage(BuildContext context) async {
@@ -163,9 +170,11 @@ class TaskProvider extends ChangeNotifier{
   ) async{
     _clear();
     await _deleteAllLocalTasksFromLocalStorage();
+    await LocalStorage.storeTotalTasks(0);
     _loading = true;
     _updateWidgetOnScreen();
 
+    _datasourceType = DatasourceType.internet;
     if(context.mounted){
       await getFirstSamplePage(context);
     }
@@ -177,6 +186,7 @@ class TaskProvider extends ChangeNotifier{
       text: 'This action will delete all your tasks. This action cannot be undone.',
       onOkPressed: (dialogContext)async{
         _tasks.clear();
+        LocalStorage.storeTotalTasks(0);
         _updateWidgetOnScreen();
         _deleteAllLocalTasksFromLocalStorage();
       },
@@ -193,11 +203,15 @@ class TaskProvider extends ChangeNotifier{
   }
 
   void getFirstTasksFromLocalStorage() async{
+    _clear();
     await _getTasksFromLocalStorage();
     _loading = false;
     _updateWidgetOnScreen();
 
     _totalTasks = (await LocalStorage.getTotalTasks()) ?? 0;
+    if(_totalTasks == 0){
+      await LocalStorage.storeTotalTasks(_tasks.length);
+    }
   }
 
   Future<void> _getTasksFromLocalStorage() async {
@@ -206,8 +220,9 @@ class TaskProvider extends ChangeNotifier{
     result.fold((l){
       debugPrint('$l, ${StackTrace.current}');
     }, (taskPage){
-      debugPrint("fibbo LOAD");
       _tasks.addAll(taskPage);
     });
+    _currentPage++;
+
   }
 }

@@ -1,4 +1,4 @@
-import 'package:gerenciador_de_tarefas/core/enums/priority.dart';
+import 'package:gerenciador_de_tarefas/core/enums/priority/priority.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/data/dto/response/task_response_dto.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task_model/task.dart';
 
