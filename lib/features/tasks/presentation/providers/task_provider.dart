@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/enums/complete_filter.dart';
+import 'package:gerenciador_de_tarefas/core/enums/list_order.dart';
 import 'package:gerenciador_de_tarefas/core/enums/priority/priority.dart';
 import 'package:gerenciador_de_tarefas/core/usecase/usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/delete_all_local_tasks_usecase.dart';
@@ -41,6 +42,18 @@ class TaskProvider extends ChangeNotifier{
   List<TaskModel> _tasks = [];
   List<TaskModel> get tasks => _tasks;
 
+  ListOrder _listOrder = ListOrder.byPriority;
+  ListOrder get listOrder => _listOrder;
+
+  void changeListOrder(ListOrder value){
+    if(_listOrder == value){
+      return;
+    }
+    _listOrder = value;
+    _tasks.sort(_sortTaskOrder);
+    _updateWidgetOnScreen();
+  }
+
   void _updateWidgetOnScreen(){
     notifyListeners();
   }
@@ -54,6 +67,7 @@ class TaskProvider extends ChangeNotifier{
       },
       (taskPageResult) async{
         _tasks.addAll(taskPageResult);
+        _tasks.sort(_sortTaskOrder);
         _saveTaskPageInLocalStorage();
       },
     );
@@ -155,6 +169,7 @@ class TaskProvider extends ChangeNotifier{
       debugPrint('$l, ${StackTrace.current}');
     }, (taskPage){
       _tasks.addAll(taskPage);
+      _tasks.sort(_sortTaskOrder);
     });
     _loading = false;
     _updateWidgetOnScreen();
@@ -182,13 +197,36 @@ class TaskProvider extends ChangeNotifier{
     int? id = await _saveTaskInLocalStorage(newTask);
     if(id!= null){
       _tasks.add(newTask.copyWith(id: id));
+      _tasks.sort(_sortTaskOrder);
     }
     _updateWidgetOnScreen();
+  }
+
+  int _sortByPriority(a, b) {
+    int priorityComparison = b.priority.index.compareTo(a.priority.index);
+    if (priorityComparison == 0) {
+      return a.id!.compareTo(b.id!);
+    }
+    return priorityComparison;
+  }
+
+  int _sortByDate(a,b){
+    return a.id!.compareTo(b.id!);
+  }
+
+  int _sortTaskOrder(a,b){
+    switch(_listOrder){
+      case ListOrder.byPriority:
+        return _sortByPriority(a, b);
+      case ListOrder.byDate:
+        return _sortByDate(a, b);
+    }
   }
 
   void editTask(TaskModel newTask){
     int index = _tasks.indexWhere((t)=> t.id == newTask.id);
     _tasks[index] = _tasks[index].copy(newTask);
+    _tasks.sort(_sortTaskOrder);
 
     _updateWidgetOnScreen();
     _updateTaskInLocalStorage(newTask);
@@ -253,6 +291,7 @@ class TaskProvider extends ChangeNotifier{
         }
       }
       _tasks = filteredTasks;
+      _tasks.sort(_sortTaskOrder);
       _updateWidgetOnScreen();
     });
   }

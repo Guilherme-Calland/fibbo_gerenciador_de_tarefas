@@ -6,6 +6,7 @@ import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/cre
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/filter_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/complete_filter_labels.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/filter_icon.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/list_order_labels.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/loading_indicator.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/create_task_suggestion_button.dart';
@@ -45,15 +46,30 @@ class HomePage extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  const SizedBox(height: 24.0),
+                  const SizedBox(height: 12.0),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
                     child: Column(
                       children: [
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('placeholder'),
-                            const SizedBox(width: 4.0,),
+                            Row(
+                              children: [
+                                const Text(
+                                  'Order:',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: AppColors.inactiveColor,
+                                  ),
+                                ),
+                                const SizedBox(width: 8.0),
+                                ListOrderLabels(
+                                  value: taskProvider.listOrder,
+                                  onSelected: taskProvider.changeListOrder,
+                                )
+                              ],
+                            ),
                             Consumer<FilterProvider>(
                               builder: (context, provider, _) {
                                 return FilterIcon(
@@ -87,8 +103,6 @@ class HomePage extends StatelessWidget {
                                       value: val,
                                     ),
                                   ),
-                                  const SizedBox(height: 8.0),
-                                                  
                                 ],
                               ),
                             );

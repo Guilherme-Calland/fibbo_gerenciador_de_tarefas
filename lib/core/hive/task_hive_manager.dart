@@ -44,7 +44,14 @@ class TaskHiveManager{
     try{
       final box = await _initBox();
       final List<TaskModel> list =  box.values.toList(growable: false);
-      return list..sort((a, b) => a.id!.compareTo(b.id!));
+      
+      return list..sort((a, b) {
+        int priorityComparison = b.priority.index.compareTo(a.priority.index);
+        if (priorityComparison == 0) {
+          return a.id!.compareTo(b.id!);
+        }
+        return priorityComparison;
+      });
     }catch(e){
       throw Exception(e);
     }
