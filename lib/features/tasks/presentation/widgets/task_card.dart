@@ -77,7 +77,7 @@ class TaskCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                          if (model.description != null)
+                          if ((model.description ?? "").isNotEmpty)
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

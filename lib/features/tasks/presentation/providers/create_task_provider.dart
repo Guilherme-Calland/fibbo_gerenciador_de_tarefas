@@ -42,7 +42,7 @@ class CreateTaskProvider extends ChangeNotifier{
       final newTask = TaskModel(
         id: task?.id,
         title: _titleController.text.trim(),
-        description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
+        description: _descriptionController.text.trim(),
         priority: priority,
         completed: task?.completed ?? false
       );

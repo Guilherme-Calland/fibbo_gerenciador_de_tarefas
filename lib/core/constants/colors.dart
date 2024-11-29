@@ -18,5 +18,6 @@ class AppColors{
   static const borderColor = Colors.grey;
   static const dividerColor = Color.fromARGB(255, 198, 198, 198);
   static const error = Color.fromARGB(255, 216, 0, 0);
-  static const deleteHighlight = Color.fromARGB(255, 216, 93, 93); 
+  static const deleteHighlight = Color.fromARGB(255, 216, 93, 93);
+  static var mainColorSaturated = const Color.fromARGB(255, 90, 40, 255); 
 }
