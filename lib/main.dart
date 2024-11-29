@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'core/constants/routes.dart';
 
 void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
   await HiveManager.initHive();
   runApp(const TaskManager());
 }

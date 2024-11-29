@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
+import 'package:gerenciador_de_tarefas/core/constants/local.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/save_local_task_page_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/warning_dialog.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/data/dto/request/task_request_dto.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task_model/task.dart';
@@ -9,8 +11,13 @@ import 'package:provider/provider.dart';
 
 class TaskProvider extends ChangeNotifier{
   final GetSampleTasksUsecase _getSampleTasksUsecase;
-  TaskProvider({required GetSampleTasksUsecase getSampleTasksUsecase})
-    : _getSampleTasksUsecase = getSampleTasksUsecase;
+  final SaveLocalTaskPageUsecase _saveLocalTaskPageUsecase;
+
+  TaskProvider({
+    required GetSampleTasksUsecase getSampleTasksUsecase,
+    required SaveLocalTaskPageUsecase saveLocalTaskPageUsecase,
+  })  : _getSampleTasksUsecase = getSampleTasksUsecase,
+        _saveLocalTaskPageUsecase = saveLocalTaskPageUsecase;
 
   bool _loading = true;
   bool get loading => _loading;
@@ -47,7 +54,10 @@ class TaskProvider extends ChangeNotifier{
         debugPrint('$error');
         _error = true;
       },
-      (taskPageResult) {
+      (taskPageResult) async{
+        _currentTaskPage.clear();
+        _currentTaskPage.addAll(taskPageResult.tasks);
+
         _totalTasks = taskPageResult.total;
         _tasks.addAll(taskPageResult.tasks);
 
@@ -76,10 +86,12 @@ class TaskProvider extends ChangeNotifier{
     _tasks[index] = task.copyWith(completed: !_tasks[index].completed);
   }
 
+  final List<TaskModel> _currentTaskPage = [];
   Future<bool> fetchNewTaskPage(BuildContext context) async{
     _error = false;
     bool isLastPage = await _getSampleTasks(context: context);
     _updateWidgetOnScreen();
+    _saveTaskPageInLocalStorage();
     return isLastPage;
   }
 
@@ -87,6 +99,18 @@ class TaskProvider extends ChangeNotifier{
     await _getSampleTasks(context: context);
     _loading = false;
     _updateWidgetOnScreen();
+
+    LocalStorage.storeTotalTasks(totalTasks);
+    _saveTaskPageInLocalStorage();
+  }
+
+  Future<void> _saveTaskPageInLocalStorage() async {
+    final result = await _saveLocalTaskPageUsecase(_currentTaskPage);
+    result.fold((l){
+      debugPrint("$l");
+    }, (r){
+      debugPrint("fibbo, success!");
+    });
   }
 
   void _clear(){

@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/data/dto/request/task_request_dto.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task_page/task_page.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task_page.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample_tasks_usecase.dart';
 import 'package:mocktail/mocktail.dart';
 import '../mock_repositories/mock_task_repository.dart';

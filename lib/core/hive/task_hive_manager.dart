@@ -1,19 +1,38 @@
-import 'package:gerenciador_de_tarefas/features/tasks/data/dto/request/save_local_task_page_request.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task_page/task_page.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task_model/task.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class TaskHiveManager{
-  static Box<TaskPage>? _taskBox;
+  TaskHiveManager._();
 
-  static Future<Box<TaskPage>> _initBox() async {
+  static TaskHiveManager? _instance;
+  static TaskHiveManager getInstance(){
+    _instance ??= TaskHiveManager._();
+    return _instance!;
+  }
+
+  static Box<TaskModel>? _taskBox;
+
+  static Future<Box<TaskModel>> _initBox() async {
     _taskBox ??= await Hive.openBox('tasks');
     return Future.value(_taskBox);
   }
 
-  Future<bool> saveTaskPage(SaveLocalTaskPageRequest params) async {
+  Future<bool> saveTask(TaskModel params) async {
     try{
       final box = await _initBox();
-      await box.put('${params.pageNumber}', params.taskPage);
+      await box.put('${params.id}', params);
+      return true;
+    }catch(e){
+      throw Exception('$e');
+    }
+  }
+
+  Future<bool> saveTaskPage(List<TaskModel> params) async {
+    try{
+      final box = await _initBox();
+      for(var task in params){
+        await box.put('${task.id}', task);
+      }
       return true;
     }catch(e){
       throw Exception('$e');

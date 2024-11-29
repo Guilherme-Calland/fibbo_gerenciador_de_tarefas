@@ -1,7 +1,11 @@
+import 'package:gerenciador_de_tarefas/core/hive/task_hive_manager.dart';
 import 'package:gerenciador_de_tarefas/core/network/api_client.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/data/datasources/implementation/task_datasource.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/repositories/implementation/local_task_repository.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/repositories/implementation/task_repository.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample_tasks_usecase.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/save_local_task_page_usecase.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/save_local_task_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/create_task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_scroll_provider.dart';
@@ -12,11 +16,15 @@ class AppProvider{
   static List<SingleChildWidget> providers = [
     ChangeNotifierProvider<TaskProvider>(create: (_){
       final apiClient = ApiClient.getInstance();
-      final datasource = TaskDatasource.getInstance(apiClient);
-      final repository = TaskRepository.getInstance(datasource);
+      final taskDatasource = TaskDatasource.getInstance(apiClient);
+      final taskRepository = TaskRepository.getInstance(taskDatasource);
+
+      final localDatasource = TaskHiveManager.getInstance();
+      final localTaskRepository = LocalTaskRepository(localDatasource);
 
       return TaskProvider(
-        getSampleTasksUsecase: GetSampleTasksUsecase(repository)
+        getSampleTasksUsecase: GetSampleTasksUsecase(taskRepository),
+        saveLocalTaskPageUsecase: SaveLocalTaskPageUsecase(localTaskRepository)
       );
 
     }),

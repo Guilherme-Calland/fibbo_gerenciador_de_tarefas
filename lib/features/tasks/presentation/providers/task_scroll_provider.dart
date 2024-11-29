@@ -20,7 +20,6 @@ class TaskScrollProvider extends ChangeNotifier{
       }
 
       bool endOfPage = _taskScrollController.position.pixels == _taskScrollController.position.maxScrollExtent;
-      debugPrint("fibbo, endOfPage: $endOfPage");
       if(endOfPage){
         await _loadNewTaskPage(context);
       }
