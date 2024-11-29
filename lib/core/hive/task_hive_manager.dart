@@ -30,9 +30,7 @@ class TaskHiveManager{
   Future<bool> saveTaskPage(List<TaskModel> params) async {
     try{
       final box = await _initBox();
-      for(var task in params){
-        await box.put('${task.id}', task);
-      }
+      await box.addAll(params);
       return true;
     }catch(e){
       throw Exception(e);

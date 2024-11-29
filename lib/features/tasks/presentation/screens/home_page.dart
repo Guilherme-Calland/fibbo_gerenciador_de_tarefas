@@ -57,10 +57,10 @@ class HomePage extends StatelessWidget {
                     const horizontalPadding = 16.0;
                     return TaskCard(
                       model,
-                      padding: const EdgeInsets.only(
+                      padding: EdgeInsets.only(
                         left: horizontalPadding,
                         right: horizontalPadding,
-                        top: 8.0
+                        top: index == 0 ? 32.0 : 8
                       ),
                       onCompleteToggle: () => taskProvider.updateTask(
                         context: context, task: model
