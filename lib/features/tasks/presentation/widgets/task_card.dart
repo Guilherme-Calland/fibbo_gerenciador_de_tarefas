@@ -68,15 +68,19 @@ class _TaskWidgetState extends State<TaskCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              AppCheckbox(
-                                value: completed,
-                                onChanged: (val){
-                                  setState(() {
-                                    completed = !completed;
-                                  });
-                                  widget.onCompleteToggle();
-                                },
+                              Padding(
+                                padding: const EdgeInsets.only(top: 4.0),
+                                child: AppCheckbox(
+                                  value: completed,
+                                  onChanged: (val){
+                                    setState(() {
+                                      completed = !completed;
+                                    });
+                                    widget.onCompleteToggle();
+                                  },
+                                ),
                               ),
                               const SizedBox(width: 8.0),
                               Expanded(
