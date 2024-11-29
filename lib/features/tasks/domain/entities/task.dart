@@ -29,6 +29,10 @@ class TaskModel{
     description = null,
     completed = false,
     priority = TaskPriority.low;
+
+  TaskModel copy(TaskModel editTask){
+    return editTask;
+  }
   
   TaskModel copyWith({
     String? title,

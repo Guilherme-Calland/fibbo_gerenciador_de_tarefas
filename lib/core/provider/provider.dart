@@ -9,6 +9,7 @@ import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_local_
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample_tasks_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/save_local_task_page_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/save_local_task_usecase.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/update_local_task_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/create_task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
 import 'package:provider/provider.dart';
@@ -29,16 +30,14 @@ class AppProvider{
         saveLocalTaskPageUsecase: SaveLocalTaskPageUsecase(localTaskRepository),
         getLocalTaskPageUsecase: GetLocalTaskPageUsecase(localTaskRepository),
         deleteAllLocalTasksUsecase: DeleteAllLocalTasksUsecase(localTaskRepository),
-        deleteLocalTaskUsecase: DeleteLocalTaskUsecase(localTaskRepository)
+        deleteLocalTaskUsecase: DeleteLocalTaskUsecase(localTaskRepository),
+        saveLocalTaskUsecase: SaveLocalTaskUsecase(localTaskRepository),
+        updateLocalTaskUsecase: UpdateLocalTaskUsecase(localTaskRepository)
       );
 
     }),
     ChangeNotifierProvider<CreateTaskProvider>(create: (_){
-      final localDatasource = TaskHiveManager.getInstance();
-      final localTaskRepository = LocalTaskRepository(localDatasource);
-      return CreateTaskProvider(
-        saveLocalTaskUsecase: SaveLocalTaskUsecase(localTaskRepository)
-      );
+      return CreateTaskProvider();
     }),
   ];
 }

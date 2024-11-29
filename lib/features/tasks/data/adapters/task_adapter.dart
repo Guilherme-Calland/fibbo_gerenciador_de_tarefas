@@ -20,4 +20,13 @@ class TaskAdapter{
       completed: dto.completed,
     );
   }
+
+  static TaskDTO toDTO(TaskModel newTask) {
+    return TaskDTO(
+      title: newTask.title,
+      description: newTask.description,
+      priority: TaskPriority.values.indexOf(newTask.priority),
+      completed: newTask.completed,
+    );
+  }
 }

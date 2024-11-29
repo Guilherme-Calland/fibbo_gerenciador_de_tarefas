@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 
 class CreateTaskPage extends StatelessWidget {
   const CreateTaskPage(BuildContext context, {super.key, this.task});
-
   final TaskModel? task;
 
   @override

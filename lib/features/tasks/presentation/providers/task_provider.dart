@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/usecase/usecase.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/data/adapters/task_adapter.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/data/dto/request/update_task_request_dto.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/delete_all_local_tasks_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/delete_local_task_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_local_task_page_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/save_local_task_page_usecase.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/save_local_task_usecase.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/update_local_task_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/warning_dialog.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample_tasks_usecase.dart';
@@ -15,13 +19,17 @@ class TaskProvider extends ChangeNotifier{
   final GetLocalTaskPageUsecase getLocalTaskPageUsecase;
   final DeleteAllLocalTasksUsecase deleteAllLocalTasksUsecase;
   final DeleteLocalTaskUsecase deleteLocalTaskUsecase;
+  final SaveLocalTaskUsecase saveLocalTaskUsecase;
+  final UpdateLocalTaskUsecase updateLocalTaskUsecase;
 
   TaskProvider({
     required this.getSampleTasksUsecase,
     required this.saveLocalTaskPageUsecase,
     required this.getLocalTaskPageUsecase,
     required this.deleteAllLocalTasksUsecase,
-    required this.deleteLocalTaskUsecase
+    required this.deleteLocalTaskUsecase,
+    required this.saveLocalTaskUsecase,
+    required this.updateLocalTaskUsecase
   });
 
   bool _loading = true;
@@ -31,6 +39,9 @@ class TaskProvider extends ChangeNotifier{
   bool get error => _error;
 
   final List<TaskModel> _tasks = [];
+
+  int? editingIndex;
+
   List<TaskModel> get tasks => _tasks;
 
   void _updateWidgetOnScreen(){
@@ -63,13 +74,6 @@ class TaskProvider extends ChangeNotifier{
     result.fold((l){
       debugPrint('$l');
     }, (r){});
-  }
-
-  updateTask({
-    required TaskModel task,
-    required int index,
-  }) {
-    _tasks[index] = task.copyWith(completed: !_tasks[index].completed);
   }
 
   Future<void> getSamplePage() async {
@@ -177,8 +181,35 @@ class TaskProvider extends ChangeNotifier{
     }, (r){});
   }
 
-  void addNewTask(TaskModel newTask) {
+  void addNewTask(TaskModel newTask){
     _tasks.add(newTask);
     _updateWidgetOnScreen();
+    _saveTaskInLocalStorage(newTask);
+  }
+
+  void editTask(TaskModel newTask){
+    _tasks[editingIndex!] = _tasks[editingIndex!].copy(newTask);
+    _updateWidgetOnScreen();
+    _updateTaskInLocalStorage(newTask);
+  }
+
+  void toggleTaskComplete(index){
+    _tasks[index] = _tasks[index].copyWith(completed: !_tasks[index].completed);
+    _updateTaskInLocalStorage(_tasks[index]);
+  }
+
+  Future<void> _saveTaskInLocalStorage(TaskModel newTask) async {
+    final result = await saveLocalTaskUsecase(newTask);
+    result.fold((l){
+      debugPrint('$l');
+    },(r){});
+  }
+  
+  Future<void> _updateTaskInLocalStorage(TaskModel newTask) async{
+    final params = UpdateTaskRequestDTO(index: editingIndex!, task: TaskAdapter.toDTO(newTask));
+    final result = await updateLocalTaskUsecase(params);
+    result.fold((l){
+      debugPrint('$l');
+    }, (r){});
   }
 }

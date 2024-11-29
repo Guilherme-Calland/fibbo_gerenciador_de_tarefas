@@ -1,16 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:gerenciador_de_tarefas/core/enums/priority/priority.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/save_local_task_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
 import 'package:provider/provider.dart';
 
 class CreateTaskProvider extends ChangeNotifier{
-  final SaveLocalTaskUsecase saveLocalTaskUsecase;
-
-  CreateTaskProvider({
-    required this.saveLocalTaskUsecase
-  });
+  CreateTaskProvider();
 
   final _titleController = TextEditingController();
   TextEditingController get titleController => _titleController;
@@ -31,41 +26,39 @@ class CreateTaskProvider extends ChangeNotifier{
     _priority = TaskPriority.low;
   }
 
+
   void onPriorityChanged(TaskPriority? value) {
     _priority = value!;
-    debugPrint("\nfibbo, priority${value?.label}\n");
     _updateWidgetsOnScreen();
   }
 
   createTask(BuildContext context){
-    _titleError = _titleController.text.isEmpty;
+    _titleError = _titleController.text.trim().isEmpty;
     if(_titleError){
       _updateWidgetsOnScreen();
     }
     bool validFields = !_titleError;
     if(validFields){
-      final newTask = TaskModel(
-        title: _titleController.text,
-        description: _descriptionController.text.isEmpty ? null : _descriptionController.text,
+      final task = TaskModel(
+        title: _titleController.text.trim(),
+        description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
         priority: priority,
       );
 
-      context.read<TaskProvider>().addNewTask(newTask);
-      Navigator.pop(context);
+      final taskProvider = context.read<TaskProvider>();
+      bool creatingNewTask = taskProvider.editingIndex == null;
 
-      _saveTaskInLocalStorage(newTask);
+      if(creatingNewTask){
+        taskProvider.addNewTask(task);
+      }else{
+        taskProvider.editTask(task);
+      }
+      Navigator.pop(context);
     }
   }
 
   void _updateWidgetsOnScreen(){
     notifyListeners();
-  }
-  
-  Future<void> _saveTaskInLocalStorage(TaskModel newTask) async{
-    final result = await saveLocalTaskUsecase(newTask);
-      result.fold((l){
-        debugPrint('$l');
-      }, (r){});
   }
 
   void _initalizeEditTaskFields(TaskModel model) {
@@ -74,12 +67,12 @@ class CreateTaskProvider extends ChangeNotifier{
     _priority = model.priority;
   }
 
-  void onInit(TaskModel? task) {
+  void onInit({TaskModel? task, int? index}) {
     bool createingNewTask = task == null;
     if(createingNewTask){
       _clear();
     }else{
-      _initalizeEditTaskFields(task!);
+      _initalizeEditTaskFields(task);
     }
   }
 }
