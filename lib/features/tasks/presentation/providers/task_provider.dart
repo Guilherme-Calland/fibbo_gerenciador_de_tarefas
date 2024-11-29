@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
-import 'package:gerenciador_de_tarefas/core/constants/local.dart';
-import 'package:gerenciador_de_tarefas/core/enums/datasource_type.dart';
 import 'package:gerenciador_de_tarefas/core/usecase/usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/delete_all_local_tasks_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_local_task_page_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/save_local_task_page_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/warning_dialog.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/data/dto/request/task_request_dto.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task_model/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample_tasks_usecase.dart';
-import 'package:provider/provider.dart';
 
 class TaskProvider extends ChangeNotifier{
   final GetSampleTasksUsecase getSampleTasksUsecase;
@@ -34,29 +30,15 @@ class TaskProvider extends ChangeNotifier{
   final List<TaskModel> _tasks = [];
   List<TaskModel> get tasks => _tasks;
 
-  DatasourceType _datasourceType = DatasourceType.localStorage;
-
   void _updateWidgetOnScreen(){
     notifyListeners();
   }
 
-  int _currentPage = 1;
-  int get currentPage => _currentPage;
+  final int _pageSize = 30;
 
-  final int _pageSize = 10;
+  Future<void> _getSampleTasks() async {
 
-  int _totalTasks = 0;
-  int get totalTasks => _totalTasks;
-
-  Future<bool> _getSampleTasks({
-    required BuildContext context,
-  }) async {
-    final params = TaskPageRequestDTO(
-      pageNumber: currentPage,
-      pageSize: _pageSize,
-    );
-    final result = await getSampleTasksUsecase(params);
-    bool isLastPage = false;
+    final result = await getSampleTasksUsecase(NoParams());
     result.fold(
       (error) {
         debugPrint('$error');
@@ -65,22 +47,14 @@ class TaskProvider extends ChangeNotifier{
       (taskPageResult) async{
         _currentTaskPage.clear();
         _currentTaskPage.addAll(taskPageResult.tasks);
-
-        _totalTasks = taskPageResult.total;
         _tasks.addAll(taskPageResult.tasks);
-
-        int maxNumItemsFetched = _currentPage * _pageSize;
-        isLastPage = taskPageResult.total <= maxNumItemsFetched;
-        _currentPage++;
-
+        _saveTaskPageInLocalStorage();
       },
     );
 
-    return isLastPage;
   }
 
   deleteTask({required BuildContext context,required TaskModel task}) {
-    _totalTasks--;
     _tasks.remove(task);
     _updateWidgetOnScreen();
   }
@@ -94,41 +68,16 @@ class TaskProvider extends ChangeNotifier{
   }
 
   final List<TaskModel> _currentTaskPage = [];
-  Future<bool> fetchNewTaskPage(BuildContext context) async{
-    _error = false;
-    if(_datasourceType == DatasourceType.internet){
-      await _getSampleTasks(context: context);
-      await _saveTaskPageInLocalStorage();
-    }else{
-      await _getTasksFromLocalStorage();
-    }
-    _updateWidgetOnScreen();
-    return _tasks.length >= _totalTasks;
-  }
 
-  Future<void> getFirstSamplePage(BuildContext context) async {
-    await _getSampleTasks(context: context);
+  Future<void> getSamplePage() async {
+    await _getSampleTasks();
     _loading = false;
     _updateWidgetOnScreen();
-
-    LocalStorage.storeTotalTasks(totalTasks);
-    _saveTaskPageInLocalStorage();
-  }
-
-  Future<void> _saveTaskPageInLocalStorage() async {
-    final result = await saveLocalTaskPageUsecase(_currentTaskPage);
-    result.fold((l){
-      debugPrint("$l");
-    }, (r){
-      debugPrint("fibbo, success!");
-    });
   }
 
   void _clear(){
-    _currentPage = 1;
     _tasks.clear();
     _error = false;
-    _totalTasks = 0;
     _currentTaskPage.clear();
   }
 
@@ -167,14 +116,11 @@ class TaskProvider extends ChangeNotifier{
      BuildContext context,
   ) async{
     _clear();
-    await _deleteAllLocalTasksFromLocalStorage();
-    await LocalStorage.storeTotalTasks(0);
+    await _deleteAllTasksFromLocalStorage();
     _loading = true;
     _updateWidgetOnScreen();
-
-    _datasourceType = DatasourceType.internet;
     if(context.mounted){
-      await getFirstSamplePage(context);
+      await _refreshSampleTasks();
     }
   }
 
@@ -184,43 +130,48 @@ class TaskProvider extends ChangeNotifier{
       text: 'This action will delete all your tasks. This action cannot be undone.',
       onOkPressed: (dialogContext)async{
         _tasks.clear();
-        LocalStorage.storeTotalTasks(0);
         _updateWidgetOnScreen();
-        _deleteAllLocalTasksFromLocalStorage();
+        _deleteAllTasksFromLocalStorage();
       },
       okButtonColor: AppColors.deleteHighlight
     );
     
   }
 
-  Future<void> _deleteAllLocalTasksFromLocalStorage() async {
+  Future<void> _deleteAllTasksFromLocalStorage() async {
     final result = await deleteAllLocalTasksUsecase(NoParams());
     result.fold((l){
       debugPrint("$l");
     }, (r){});
   }
 
-  void getFirstTasksFromLocalStorage() async{
+  Future<void> getTasksFromLocalStorage() async{
     _clear();
-    await _getTasksFromLocalStorage();
-    _loading = false;
-    _updateWidgetOnScreen();
-
-    _totalTasks = (await LocalStorage.getTotalTasks()) ?? 0;
-    if(_totalTasks == 0){
-      await LocalStorage.storeTotalTasks(_tasks.length);
-    }
-  }
-
-  Future<void> _getTasksFromLocalStorage() async {
-    final params = TaskPageRequestDTO(pageNumber: _currentPage, pageSize: _pageSize);
-    final result = await getLocalTaskPageUsecase(params);
+    final result = await getLocalTaskPageUsecase(NoParams());
     result.fold((l){
       debugPrint('$l, ${StackTrace.current}');
     }, (taskPage){
       _tasks.addAll(taskPage);
     });
-    _currentPage++;
+    _loading = false;
+    _updateWidgetOnScreen();
+  }
+  
+  Future<void> _refreshSampleTasks() async{
+    _clear();
+    _loading = true;
+    _updateWidgetOnScreen();
 
+    await _getSampleTasks();
+
+    _loading = false;
+    _updateWidgetOnScreen();
+  }
+
+  Future<void> _saveTaskPageInLocalStorage()async{
+    final result = await saveLocalTaskPageUsecase(_tasks);
+    result.fold((l){
+      debugPrint('$l');
+    }, (r){});
   }
 }

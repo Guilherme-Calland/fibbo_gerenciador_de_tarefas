@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:gerenciador_de_tarefas/core/hive/task_hive_manager.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/data/dto/request/task_request_dto.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task_model/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/repositories/i_local_task_repository.dart';
 
@@ -31,9 +30,9 @@ class LocalTaskRepository implements ILocalTaskRepository{
   }
 
   @override
-  Future<Either<Exception, List<TaskModel>>> getTaskPage(TaskPageRequestDTO params) async{
+  Future<Either<Exception, List<TaskModel>>> getTaskPage() async{
     try{
-      final result = await datasource.getTaskPage(params);
+      final result = await datasource.getTaskPage();
       return Right(result);
     }catch(e){
       return Left(Exception(e));

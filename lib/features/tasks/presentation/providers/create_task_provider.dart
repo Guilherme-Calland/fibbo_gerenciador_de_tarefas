@@ -38,7 +38,7 @@ class CreateTaskProvider extends ChangeNotifier{
 
     bool validFields = !_titleError;
     if(validFields){
-      final int newTaskId = context.read<TaskProvider>().totalTasks + 1;
+      final int newTaskId = context.read<TaskProvider>().tasks.length + 1;
       final newTask = TaskModel(
         id: newTaskId,
         title: _titleController.text,

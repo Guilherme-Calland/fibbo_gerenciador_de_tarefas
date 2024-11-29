@@ -55,26 +55,20 @@ class HomePage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final model = taskProvider.tasks[index];
                     const horizontalPadding = 16.0;
-                    final lastItem = index == taskProvider.tasks.length - 1;
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TaskCard(
-                          model,
-                          padding: const EdgeInsets.only(
-                            left: horizontalPadding,
-                            right: horizontalPadding,
-                            top: 8.0
-                          ),
-                          onCompleteToggle: () => taskProvider.updateTask(
-                            context: context, task: model
-                          ),
-                          onDeletePressed: () => taskProvider.deleteTask(
-                            context: context,
-                            task: model,
-                          ),
-                        ),
-                      ],
+                    return TaskCard(
+                      model,
+                      padding: const EdgeInsets.only(
+                        left: horizontalPadding,
+                        right: horizontalPadding,
+                        top: 8.0
+                      ),
+                      onCompleteToggle: () => taskProvider.updateTask(
+                        context: context, task: model
+                      ),
+                      onDeletePressed: () => taskProvider.deleteTask(
+                        context: context,
+                        task: model,
+                      ),
                     );
                   },
                 ),
@@ -119,7 +113,7 @@ class HomePage extends StatelessWidget {
   _goToCreateTaskPage(BuildContext context) => Navigator.pushNamed(context, AppRoutes.create);
   
   _getTasksFromLocalStorage(BuildContext context) {
-    context.read<TaskProvider>().getFirstTasksFromLocalStorage();
+    context.read<TaskProvider>().getTasksFromLocalStorage();
   }
 }
 
