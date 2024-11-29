@@ -75,10 +75,9 @@ class _TaskWidgetState extends State<TaskCard> {
                                 child: AppCheckbox(
                                   value: completed,
                                   onChanged: (val){
-                                    //fibbo
-                                    // setState(() {
-                                    //   completed = !completed;
-                                    // });
+                                    setState(() {
+                                      completed = !completed;
+                                    });
                                     widget.onCompleteToggle();
                                   },
                                 ),
