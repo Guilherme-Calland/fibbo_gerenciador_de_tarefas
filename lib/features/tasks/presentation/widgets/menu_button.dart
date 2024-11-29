@@ -11,7 +11,7 @@ class MenuButton extends StatefulWidget {
   });
 
   final IconData icon;
-  final List<LabeledButton> actionButtons;
+  final List<LabeledButton> Function(Function()) actionButtons;
   final bool active;
 
   @override
@@ -24,7 +24,6 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
   bool _actionsOpen = false;
 
   void _toggleMenu() {
-
     setState(() {
       if(_opacity == 0.0){
         _actionsVisible = true;
@@ -60,13 +59,13 @@ class _MenuButtonState extends State<MenuButton> with SingleTickerProviderStateM
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [... List.generate(
-                widget.actionButtons.length,
+                widget.actionButtons(_toggleMenu).length,
                 (index) {
                   return Padding(
                     padding: index == 0
                         ? EdgeInsets.zero
                         : const EdgeInsets.only(top: spacing),
-                    child: widget.actionButtons[index],
+                    child: widget.actionButtons(_toggleMenu)[index],
                   );
                 },
               ), const SizedBox(height: spacing)],

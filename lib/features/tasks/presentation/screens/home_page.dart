@@ -150,25 +150,34 @@ class HomePage extends StatelessWidget {
                 child: MenuButton(
                   active: !taskProvider.loading,
                   icon: Icons.menu,
-                  actionButtons: [
+                  actionButtons: (closeMenu) => [
                     LabeledButton(
                       active: !taskProvider.loading,
                       icon: Icons.add,
-                      onTap: () => _goToCreateTaskPage(context: context),
+                      onTap: (){
+                        closeMenu();
+                        _goToCreateTaskPage(context: context);
+                      },
                       label: "Create new task",
                       color: AppColors.addHighlight,
                     ),
                     LabeledButton(
                       active: !taskProvider.loading,
                       icon: Icons.cloud_outlined,
-                      onTap: () => taskProvider.refreshSamplePage(context),
+                      onTap: (){
+                        closeMenu();
+                        taskProvider.refreshSamplePage(context);
+                      },
                       label: "Load sample tasks from the internet",
                       color: AppColors.webHighlight,
                     ),
                     LabeledButton(
                       active: !taskProvider.loading,
                       icon: Icons.delete,
-                      onTap: () => taskProvider.deleteAllTasks(context),
+                      onTap: (){
+                        closeMenu();
+                        taskProvider.deleteAllTasks(context);
+                      },
                       label: "Delete all tasks",
                       color: AppColors.deleteHighlight,
                     ),
