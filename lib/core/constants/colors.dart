@@ -13,9 +13,10 @@ class AppColors{
   static const priorityMedium = Color.fromARGB(255, 255, 149, 0);
   static const priorityHigh = Color.fromARGB(255, 216, 0, 0);
 
-  static const secondaryText = Color.fromARGB(255, 33, 33, 33);
+  static const secondaryText = Color.fromARGB(255, 73, 73, 73);
   static const backgroundIcon = Colors.grey;
   static const borderColor = Colors.grey;
+  static const dividerColor = Color.fromARGB(255, 198, 198, 198);
   static const error = Color.fromARGB(255, 216, 0, 0);
   static const deleteHighlight = Color.fromARGB(255, 216, 93, 93); 
 }

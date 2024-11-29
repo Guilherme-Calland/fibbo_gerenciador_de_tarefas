@@ -68,7 +68,6 @@ class _TaskWidgetState extends State<TaskCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               AppCheckbox(
                                 value: completed,
@@ -92,12 +91,24 @@ class _TaskWidgetState extends State<TaskCard> {
                             ],
                           ),
                           if (widget.model.description != null)
-                            Text(
-                              widget.model.description!,
-                              style: TextStyle(
-                                color: AppColors.secondaryText,
-                                decoration: completed ? TextDecoration.lineThrough : null,
-                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 8.0),
+                                Container(
+                                  width: double.infinity,
+                                  height: 1,
+                                  color: AppColors.dividerColor,
+                                ),
+                                const SizedBox(height: 8.0),
+                                Text(
+                                  widget.model.description!,
+                                  style: TextStyle(
+                                    color: AppColors.secondaryText,
+                                    decoration: completed ? TextDecoration.lineThrough : null,
+                                  ),
+                                ),
+                              ],
                             ),
                         ],
                       ),

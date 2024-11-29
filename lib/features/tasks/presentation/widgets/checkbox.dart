@@ -13,7 +13,6 @@ class AppCheckbox extends StatelessWidget {
     return GestureDetector(
       onTap: () => onChanged(!value),
       child: Container(
-        margin: const EdgeInsets.only(top: 4.0),
         height: 16,
         width: 16,
         decoration: BoxDecoration(

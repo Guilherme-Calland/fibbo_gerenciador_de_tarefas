@@ -24,7 +24,7 @@ class CreateTaskProvider extends ChangeNotifier{
   TaskPriority _priority = TaskPriority.low;
   TaskPriority get priority => _priority;
 
-  clear(){
+  _clear(){
     _titleController.clear();
     _descriptionController.clear();
     _titleError = false;
@@ -68,9 +68,18 @@ class CreateTaskProvider extends ChangeNotifier{
       }, (r){});
   }
 
-  void initalizeEditTaskFields(TaskModel model) {
+  void _initalizeEditTaskFields(TaskModel model) {
     _titleController.text = model.title;
     _descriptionController.text = model.description??"";
     _priority = model.priority;
+  }
+
+  void onInit(TaskModel? task) {
+    bool createingNewTask = task == null;
+    if(createingNewTask){
+      _clear();
+    }else{
+      _initalizeEditTaskFields(task!);
+    }
   }
 }

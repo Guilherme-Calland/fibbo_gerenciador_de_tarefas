@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/constants/routes.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/create_task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/loading_indicator.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/create_task_suggestion_button.dart';
@@ -111,7 +112,11 @@ class HomePage extends StatelessWidget {
     );
   }
   
-  _goToCreateTaskPage({required BuildContext context, TaskModel? task}) => Navigator.pushNamed(context, AppRoutePaths.create, arguments: task);
+  _goToCreateTaskPage({required BuildContext context, TaskModel? task}){
+    final provider = context.read<CreateTaskProvider>();
+    provider.onInit(task);
+    Navigator.pushNamed(context, AppRoutePaths.create, arguments: task);
+  }
   
   _getTasksFromLocalStorage(BuildContext context) {
     context.read<TaskProvider>().getTasksFromLocalStorage();
