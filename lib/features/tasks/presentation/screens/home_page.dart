@@ -13,16 +13,15 @@ import 'package:provider/provider.dart';
 class HomePage extends StatelessWidget {
   HomePage(BuildContext context, {super.key}) {
     WidgetsBinding.instance
-        .addPostFrameCallback((_)async{
-          await _getSampleTasks(context);
+      .addPostFrameCallback((_)async{
+        await _getTasksFromLocalStorage(context);
+        if(context.mounted){
+          context.read<TaskScrollProvider>().addScrollListener(context);
           if(context.mounted){
-            context.read<TaskScrollProvider>().addScrollListener(context);
-            if(context.mounted){
-              context.read<TaskScrollProvider>().checkScrollExtent(context);
-            }
-            
+            context.read<TaskScrollProvider>().checkScrollExtent(context);
           }
-        });
+        }
+      });
   }
 
   @override
@@ -70,6 +69,7 @@ class HomePage extends StatelessWidget {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        //fibbo
                         // if (firstItem)
                         //   Column(
                         //     crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,11 +156,11 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-
-  Future<void> _getSampleTasks(BuildContext context) async {
-    await context.read<TaskProvider>().getFirstSamplePage(context);
-  }
   
   _goToCreateTaskPage(BuildContext context) => Navigator.pushNamed(context, AppRoutes.create);
+  
+  _getTasksFromLocalStorage(BuildContext context) {
+    context.read<TaskProvider>().getFirstTasksFromLocalStorage();
+  }
 }
 

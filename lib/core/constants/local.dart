@@ -6,6 +6,11 @@ class LocalStorage{
 
   static Future<void> storeTotalTasks(int totalTasks) async{
     sharedPreferences ??= await SharedPreferences.getInstance();
-    sharedPreferences!.setInt(_totalTasksKey, totalTasks);
+    await sharedPreferences!.setInt(_totalTasksKey, totalTasks);
+  }
+
+  static Future<int?> getTotalTasks() async{
+    sharedPreferences ??= await SharedPreferences.getInstance();
+    return sharedPreferences?.getInt(_totalTasksKey);
   }
 }

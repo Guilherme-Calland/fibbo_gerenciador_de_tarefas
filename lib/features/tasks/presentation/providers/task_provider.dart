@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/constants/local.dart';
+import 'package:gerenciador_de_tarefas/core/usecase/usecase.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/delete_all_local_tasks_usecase.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_local_task_page_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/save_local_task_page_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/warning_dialog.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/data/dto/request/task_request_dto.dart';
@@ -10,14 +13,17 @@ import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/tas
 import 'package:provider/provider.dart';
 
 class TaskProvider extends ChangeNotifier{
-  final GetSampleTasksUsecase _getSampleTasksUsecase;
-  final SaveLocalTaskPageUsecase _saveLocalTaskPageUsecase;
+  final GetSampleTasksUsecase getSampleTasksUsecase;
+  final SaveLocalTaskPageUsecase saveLocalTaskPageUsecase;
+  final GetLocalTaskPageUsecase getLocalTaskPageUsecase;
+  final DeleteAllLocalTasksUsecase deleteAllLocalTasksUsecase;
 
   TaskProvider({
-    required GetSampleTasksUsecase getSampleTasksUsecase,
-    required SaveLocalTaskPageUsecase saveLocalTaskPageUsecase,
-  })  : _getSampleTasksUsecase = getSampleTasksUsecase,
-        _saveLocalTaskPageUsecase = saveLocalTaskPageUsecase;
+    required this.getSampleTasksUsecase,
+    required this.saveLocalTaskPageUsecase,
+    required this.getLocalTaskPageUsecase,
+    required this.deleteAllLocalTasksUsecase,
+  });
 
   bool _loading = true;
   bool get loading => _loading;
@@ -47,7 +53,7 @@ class TaskProvider extends ChangeNotifier{
       pageNumber: currentPage,
       pageSize: _pageSize,
     );
-    final result = await _getSampleTasksUsecase(params);
+    final result = await getSampleTasksUsecase(params);
     bool isLastPage = false;
     result.fold(
       (error) {
@@ -105,7 +111,7 @@ class TaskProvider extends ChangeNotifier{
   }
 
   Future<void> _saveTaskPageInLocalStorage() async {
-    final result = await _saveLocalTaskPageUsecase(_currentTaskPage);
+    final result = await saveLocalTaskPageUsecase(_currentTaskPage);
     result.fold((l){
       debugPrint("$l");
     }, (r){
@@ -118,6 +124,7 @@ class TaskProvider extends ChangeNotifier{
     _tasks.clear();
     _error = false;
     _totalTasks = 0;
+    _currentTaskPage.clear();
   }
 
   void refreshSamplePage(BuildContext context){
@@ -153,23 +160,54 @@ class TaskProvider extends ChangeNotifier{
 
   void _onRefreshConfirm(
      BuildContext context,
-  ) {
+  ) async{
     _clear();
+    await _deleteAllLocalTasksFromLocalStorage();
     _loading = true;
     _updateWidgetOnScreen();
-    getFirstSamplePage(context);
+
+    if(context.mounted){
+      await getFirstSamplePage(context);
+    }
   }
 
   deleteAllTasks(BuildContext context) {
     _showWarningDialog(
       context: context,
       text: 'This action will delete all your tasks. This action cannot be undone.',
-      onOkPressed: (dialogContext){
+      onOkPressed: (dialogContext)async{
         _tasks.clear();
         _updateWidgetOnScreen();
+        _deleteAllLocalTasksFromLocalStorage();
       },
       okButtonColor: AppColors.deleteHighlight
     );
     
+  }
+
+  Future<void> _deleteAllLocalTasksFromLocalStorage() async {
+    final result = await deleteAllLocalTasksUsecase(NoParams());
+    result.fold((l){
+      debugPrint("$l");
+    }, (r){});
+  }
+
+  void getFirstTasksFromLocalStorage() async{
+    await _getTasksFromLocalStorage();
+    _loading = false;
+    _updateWidgetOnScreen();
+
+    _totalTasks = (await LocalStorage.getTotalTasks()) ?? 0;
+  }
+
+  Future<void> _getTasksFromLocalStorage() async {
+    final params = TaskPageRequestDTO(pageNumber: _currentPage, pageSize: _pageSize);
+    final result = await getLocalTaskPageUsecase(params);
+    result.fold((l){
+      debugPrint('$l, ${StackTrace.current}');
+    }, (taskPage){
+      debugPrint("fibbo LOAD");
+      _tasks.addAll(taskPage);
+    });
   }
 }

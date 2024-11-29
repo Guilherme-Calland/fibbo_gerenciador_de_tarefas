@@ -1,6 +1,8 @@
 import 'package:dartz/dartz.dart';
 
-abstract class Usecase<T, Params> {
-  Future<Either<Exception, T>> call(Params params);
+abstract class Usecase<Result, Params> {
+  Future<Either<Exception, Result>> call(Params params);
 }
+
+class NoParams{}
 
