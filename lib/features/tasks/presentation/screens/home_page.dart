@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/constants/routes.dart';
+import 'package:gerenciador_de_tarefas/core/enums/complete_filter.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/create_task_provider.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_filter_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/loading_indicator.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/create_task_suggestion_button.dart';
@@ -59,19 +61,64 @@ class HomePage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final model = taskProvider.tasks[index];
                     const horizontalPadding = 16.0;
-                    return TaskCard(
-                      model,
-                      padding: EdgeInsets.only(
-                        left: horizontalPadding,
-                        right: horizontalPadding,
-                        top: index == 0 ? 32.0 : 8
-                      ),
-                      onTap: ()=>  _goToCreateTaskPage(context: context, index: index, task: model),
-                      onCompleteToggle: (){
-                        taskProvider.editingIndex = index;
-                        taskProvider.toggleTaskComplete(index);
-                      },
-                      onDeletePressed: () => taskProvider.deleteTask(index),
+                    bool firstItem = index == 0;
+                    return Column(
+                      children: [
+                        if(firstItem)
+                         Column(
+                           children: [
+                             const SizedBox(height: 24.0,),
+                             Padding(
+                               padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                               child: Consumer<TaskFilterProvider>(
+                                 builder: (context, provider, _) {
+                                   return Row(
+                                    children: List.generate(CompleteFilter.values.length, (index){
+                                      final filter = CompleteFilter.values[index];
+                                      final bool selected = provider.completeFilter == filter;
+                                      return Row(
+                                        children: [
+                                          if(index != 0)
+                                          Container(
+                                            margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                                            height: 16,
+                                            width: 1,
+                                            color: AppColors.borderColor,
+                                          ),
+                                          GestureDetector(
+                                            onTap: (){
+                                              provider.changeFilter(filter);
+                                            },
+                                            child: Text(filter.label, style: TextStyle(
+                                              fontSize: 16,
+                                              color: selected ? AppColors.mainColorDark : AppColors.inactiveColor,
+                                              fontWeight: selected ? FontWeight.bold : null
+                                            ),),
+                                          ),
+                                        ],
+                                      );
+                                    },),
+                                                           );
+                                 }
+                               ),
+                             ),
+                           ],
+                         ),
+                        TaskCard(
+                          model,
+                          padding: const EdgeInsets.only(
+                            left: horizontalPadding,
+                            right: horizontalPadding,
+                            top:  8
+                          ),
+                          onTap: ()=>  _goToCreateTaskPage(context: context, index: index, task: model),
+                          onCompleteToggle: (){
+                            taskProvider.editingIndex = index;
+                            taskProvider.toggleTaskComplete(index);
+                          },
+                          onDeletePressed: () => taskProvider.deleteTask(index),
+                        ),
+                      ],
                     );
                   },
                 ),
