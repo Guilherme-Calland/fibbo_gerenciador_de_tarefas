@@ -46,48 +46,57 @@ class HomePage extends StatelessWidget {
               Column(
                 children: [
                   const SizedBox(height: 24.0),
-                  Row(
-                    children: [
-                      CompleteFilterLabels(
-                        value: taskProvider.completeFilter,
-                        onSelected: (val){
-                          taskProvider.changeFilter(val);
-                        },
-                      ),
-                      const SizedBox(width: 4.0,),
-                      Consumer<FilterProvider>(
-                        builder: (context, provider, _) {
-                          return FilterIcon(
-                            onTap: provider.toggleFiltersVisibility,
-                            hasActiveFilters: provider.hasActiveFilters(),
-                            expanded: provider.expanded,
-                          );
-                        }
-                      ),
-                    ],
-                  ),
-                  Consumer<FilterProvider>(
-                    builder: (context, provider, _) {
-                      return Visibility(
-                        visible: provider.expanded,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 8.0,),
-                              PriorityFilter(
-                                selectedPriorities: provider.priorities,
-                                onPrioritySelected: (val) =>
-                                  provider.addNewPriorityFilter(
-                                context: context,
-                                value: val,
-                              ),
-                              )
-                            ],
-                          ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text('placeholder'),
+                            const SizedBox(width: 4.0,),
+                            Consumer<FilterProvider>(
+                              builder: (context, provider, _) {
+                                return FilterIcon(
+                                  onTap: provider.toggleFiltersVisibility,
+                                  hasActiveFilters: taskProvider.hasActiveFilters(),
+                                  expanded: provider.expanded,
+                                );
+                              }
+                            ),
+                          ],
                         ),
-                      );
-                    }
+                        Consumer<FilterProvider>(
+                          builder: (context, provider, _) {
+                            return Visibility(
+                              visible: provider.expanded,
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 8.0),
+                                  CompleteFilterLabels(
+                                    value: taskProvider.completeFilter,
+                                    onSelected: (val){
+                                      taskProvider.changeFilter(val);
+                                    },
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  PriorityFilter(
+                                    selectedPriorities: taskProvider.priorities,
+                                    onPrioritySelected: (val) =>
+                                      taskProvider.addNewPriorityFilter(
+                                      context: context,
+                                      value: val,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                                  
+                                ],
+                              ),
+                            );
+                          }
+                        ),
+                    
+                      ],
+                    ),
                   ),
                   Expanded(
                     child: (){

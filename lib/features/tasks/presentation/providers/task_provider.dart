@@ -233,6 +233,8 @@ class TaskProvider extends ChangeNotifier{
   }
 
   List<TaskPriority> _priorities = [];
+  List<TaskPriority> get priorities => _priorities;
+
   Future<void> filterPriorities(List<TaskPriority> priorities) async{
     _priorities = priorities;
     await _filterTasks();
@@ -262,5 +264,27 @@ class TaskProvider extends ChangeNotifier{
     return _completeFilter == null || 
       (_completeFilter == CompleteFilter.complete && completed) || 
       (_completeFilter == CompleteFilter.pending && !completed);
+  }
+  
+  addNewPriorityFilter({
+    required BuildContext context,
+    required TaskPriority value,
+  }) {
+    if (_priorities.contains(value)) {
+      _priorities.remove(value);
+    } else {
+      _priorities.add(value);
+    }
+
+    bool allPrioritiesSelected = _priorities.length == TaskPriority.values.length;
+    if(allPrioritiesSelected){
+      _priorities.clear();
+    }
+
+    filterPriorities(_priorities);
+  }
+
+  hasActiveFilters() {
+    return _priorities.isNotEmpty && _completeFilter == null;
   }
 }
