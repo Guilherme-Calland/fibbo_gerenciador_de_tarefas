@@ -10,7 +10,6 @@ import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/warni
 import 'package:gerenciador_de_tarefas/features/tasks/data/dto/request/task_request_dto.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task_model/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample_tasks_usecase.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_scroll_provider.dart';
 import 'package:provider/provider.dart';
 
 class TaskProvider extends ChangeNotifier{
@@ -84,7 +83,6 @@ class TaskProvider extends ChangeNotifier{
     _totalTasks--;
     _tasks.remove(task);
     _updateWidgetOnScreen();
-    context.read<TaskScrollProvider>().checkScrollExtent(context);
   }
 
   updateTask({

@@ -9,7 +9,6 @@ import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/save_local_task_page_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/create_task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_scroll_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -30,9 +29,6 @@ class AppProvider{
         deleteAllLocalTasksUsecase: DeleteAllLocalTasksUsecase(localTaskRepository)
       );
 
-    }),
-    ChangeNotifierProvider<TaskScrollProvider>(create: (_){
-      return TaskScrollProvider();
     }),
     ChangeNotifierProvider<CreateTaskProvider>(create: (_){
       return CreateTaskProvider();

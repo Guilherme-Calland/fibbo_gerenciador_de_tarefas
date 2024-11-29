@@ -3,7 +3,6 @@ import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/constants/routes.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/loading_indicator.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_scroll_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/create_task_suggestion_button.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/labeled_button.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/menu_button.dart';
@@ -15,12 +14,6 @@ class HomePage extends StatelessWidget {
     WidgetsBinding.instance
       .addPostFrameCallback((_)async{
         await _getTasksFromLocalStorage(context);
-        if(context.mounted){
-          context.read<TaskScrollProvider>().addScrollListener(context);
-          if(context.mounted){
-            context.read<TaskScrollProvider>().checkScrollExtent(context);
-          }
-        }
       });
   }
 
@@ -58,34 +51,14 @@ class HomePage extends StatelessWidget {
                 )
               else
                 ListView.builder(
-                  controller: context.read<TaskScrollProvider>().taskScrollController,
                   itemCount: taskProvider.tasks.length,
                   itemBuilder: (context, index) {
                     final model = taskProvider.tasks[index];
                     const horizontalPadding = 16.0;
-                    //fibbo
-                    // final firstItem = index == 0; 
                     final lastItem = index == taskProvider.tasks.length - 1;
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        //fibbo
-                        // if (firstItem)
-                        //   Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [
-                        //       SizedBox(height: 24.0),
-                        //       // fibbo, remove isso aqui, 
-                        //       // Consumer<TaskCountProvider>(
-                        //       //   builder: (context, countProvider, _) {
-                        //       //     return CompletedTasksWidget(
-                        //       //       taskCount: countProvider.taskCount,
-                        //       //       completedTasks: countProvider.completedTaskCount,
-                        //       //     );
-                        //       //   }
-                        //       // ),
-                        //     ],
-                        //   ),
                         TaskCard(
                           model,
                           padding: const EdgeInsets.only(
@@ -101,20 +74,6 @@ class HomePage extends StatelessWidget {
                             task: model,
                           ),
                         ),
-
-                        if(lastItem)
-                        Consumer<TaskScrollProvider>(builder: (context, scrollProvider, child){
-                          return SizedBox(
-                            height: 100,
-                            width: double.infinity,
-                            child: Visibility(
-                              visible: scrollProvider.scrolling,
-                              child: const Center(
-                                child: LoadingIndicator(),
-                              ),
-                            ),
-                          );
-                        })
                       ],
                     );
                   },
