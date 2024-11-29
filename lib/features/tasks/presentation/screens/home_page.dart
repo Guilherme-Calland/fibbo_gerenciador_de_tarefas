@@ -11,6 +11,7 @@ import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/tas
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/create_task_suggestion_button.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/labeled_button.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/menu_button.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/priority_filter.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/task_card.dart';
 import 'package:provider/provider.dart';
 
@@ -59,10 +60,30 @@ class HomePage extends StatelessWidget {
                           return FilterIcon(
                             onTap: provider.toggleFiltersVisibility,
                             hasActiveFilters: provider.hasActiveFilters(),
+                            expanded: provider.expanded,
                           );
                         }
                       ),
                     ],
+                  ),
+                  Consumer<FilterProvider>(
+                    builder: (context, provider, _) {
+                      return Visibility(
+                        visible: provider.expanded,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 8.0,),
+                              PriorityFilter(
+                                selectedPriorities: provider.priorities,
+                                onPrioritySelected: provider.addNewPriorityFilter,
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    }
                   ),
                   Expanded(
                     child: (){
@@ -171,4 +192,3 @@ class HomePage extends StatelessWidget {
     context.read<TaskProvider>().getTasksFromLocalStorage();
   }
 }
-

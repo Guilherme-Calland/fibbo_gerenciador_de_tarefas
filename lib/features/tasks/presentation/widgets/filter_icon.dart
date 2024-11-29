@@ -6,10 +6,12 @@ class FilterIcon extends StatelessWidget {
     super.key,
     required this.onTap,
     required this.hasActiveFilters,
+    required this.expanded
   });
 
   final Function()onTap;
   final bool hasActiveFilters;
+  final bool expanded;
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +20,11 @@ class FilterIcon extends StatelessWidget {
       child: Stack(
         alignment: Alignment.topLeft,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.tune, color: AppColors.secondaryText,),
-              SizedBox(width: 4.0),
-              Icon(Icons.keyboard_arrow_down, color: AppColors.secondaryText)
+              const Icon(Icons.tune, color: AppColors.secondaryText,),
+              const SizedBox(width: 4.0),
+              Icon(expanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, color: AppColors.secondaryText),
             ],
           ),
           if(hasActiveFilters)
