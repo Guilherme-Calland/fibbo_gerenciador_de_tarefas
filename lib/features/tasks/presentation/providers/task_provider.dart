@@ -39,7 +39,7 @@ class TaskProvider extends ChangeNotifier{
   bool _error = false;
   bool get error => _error;
 
-  final List<TaskModel> _tasks = [];
+  List<TaskModel> _tasks = [];
 
   int? editingIndex;
 
@@ -197,6 +197,9 @@ class TaskProvider extends ChangeNotifier{
   void toggleTaskComplete(index){
     _tasks[index] = _tasks[index].copyWith(completed: !_tasks[index].completed);
     _updateTaskInLocalStorage(_tasks[index]);
+
+    //fibbo
+    _updateWidgetOnScreen();
   }
 
   Future<void> _saveTaskInLocalStorage(TaskModel newTask) async {
@@ -230,7 +233,6 @@ class TaskProvider extends ChangeNotifier{
         _completeFilter = value;
       }
       
-      _tasks.clear();
       final List<TaskModel> filteredTasks = [];
       for(var task in allTasks){
         if(_completeFilter == null || 
@@ -240,7 +242,7 @@ class TaskProvider extends ChangeNotifier{
         }
       }
 
-      _tasks.addAll(filteredTasks);
+      _tasks = filteredTasks;
 
       //fibbo
       debugPrint('\n');

@@ -6,7 +6,7 @@ import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/delet
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/priority_widget.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 
-class TaskCard extends StatefulWidget {
+class TaskCard extends StatelessWidget {
   const TaskCard(
     this.model, {
     super.key,
@@ -23,29 +23,15 @@ class TaskCard extends StatefulWidget {
   final EdgeInsets? padding;
 
   @override
-  State<TaskCard> createState() => _TaskWidgetState();
-}
-
-class _TaskWidgetState extends State<TaskCard> {
-
-  bool completed = false;
-
-  @override
-  void initState() {
-    super.initState();
-    completed = widget.model.completed;
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: widget.padding == null ? EdgeInsets.zero : widget.padding!,
+      padding: padding == null ? EdgeInsets.zero : padding!,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
             child: GestureDetector(
-              onTap: widget.onTap,
+              onTap: onTap,
               child: Container(
                 decoration: BoxDecoration(
                   color:  AppColors.foregroundColor,
@@ -59,7 +45,7 @@ class _TaskWidgetState extends State<TaskCard> {
                       alignment: Alignment.centerRight,
                       child: Padding(
                         padding: const EdgeInsets.only(top: 4.0, bottom: 1.0, right: 4.0),
-                        child: PriorityWidget(widget.model.priority),
+                        child: PriorityWidget(model.priority),
                       ),
                     ),
                     Padding(
@@ -73,28 +59,25 @@ class _TaskWidgetState extends State<TaskCard> {
                               Padding(
                                 padding: const EdgeInsets.only(top: 4.0),
                                 child: AppCheckbox(
-                                  value: completed,
+                                  value: model.completed,
                                   onChanged: (val){
-                                    setState(() {
-                                      completed = !completed;
-                                    });
-                                    widget.onCompleteToggle();
+                                    onCompleteToggle();
                                   },
                                 ),
                               ),
                               const SizedBox(width: 8.0),
                               Expanded(
                                 child: Text(
-                                  widget.model.title,
+                                  model.title,
                                   style: TextStyle(
                                     fontSize: 16,
-                                    decoration: completed ? TextDecoration.lineThrough : null,
+                                    decoration: model.completed ? TextDecoration.lineThrough : null,
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                          if (widget.model.description != null)
+                          if (model.description != null)
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -106,10 +89,10 @@ class _TaskWidgetState extends State<TaskCard> {
                                 ),
                                 const SizedBox(height: 8.0),
                                 Text(
-                                  widget.model.description!,
+                                  model.description!,
                                   style: TextStyle(
                                     color: AppColors.secondaryText,
-                                    decoration: completed ? TextDecoration.lineThrough : null,
+                                    decoration: model.completed ? TextDecoration.lineThrough : null,
                                   ),
                                 ),
                               ],
@@ -124,7 +107,7 @@ class _TaskWidgetState extends State<TaskCard> {
           ),
           const SizedBox(width: 8.0),
           DeleteIcon(onTap: (){
-            widget.onDeletePressed();
+            onDeletePressed();
           },)
         ],
       ),
