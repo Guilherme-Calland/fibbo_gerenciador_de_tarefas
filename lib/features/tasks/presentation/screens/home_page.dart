@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/constants/routes.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/loading_indicator.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/create_task_suggestion_button.dart';
@@ -48,7 +49,7 @@ class HomePage extends StatelessWidget {
               else if (taskProvider.tasks.isEmpty)
                 Center(
                   child: CreateTaskSuggestionButton(
-                    onTap: () => _goToCreateTaskPage(context),
+                    onTap: () => _goToCreateTaskPage(context: context),
                   ),
                 )
               else
@@ -64,13 +65,11 @@ class HomePage extends StatelessWidget {
                         right: horizontalPadding,
                         top: index == 0 ? 32.0 : 8
                       ),
+                      onTap: () => _goToCreateTaskPage(context: context, task: model),
                       onCompleteToggle: () => taskProvider.updateTask(
-                        context: context, task: model
+                        index: index, task: model
                       ),
-                      onDeletePressed: () => taskProvider.deleteTask(
-                        context: context,
-                        index: index,
-                      ),
+                      onDeletePressed: () => taskProvider.deleteTask(index),
                     );
                   },
                 ),
@@ -84,7 +83,7 @@ class HomePage extends StatelessWidget {
                     LabeledButton(
                       active: !taskProvider.loading,
                       icon: Icons.add,
-                      onTap: () => _goToCreateTaskPage(context),
+                      onTap: () => _goToCreateTaskPage(context: context),
                       label: "Create new task",
                       color: AppColors.addHighlight,
                     ),
@@ -112,7 +111,7 @@ class HomePage extends StatelessWidget {
     );
   }
   
-  _goToCreateTaskPage(BuildContext context) => Navigator.pushNamed(context, AppRoutes.create);
+  _goToCreateTaskPage({required BuildContext context, TaskModel? task}) => Navigator.pushNamed(context, AppRoutePaths.create, arguments: task);
   
   _getTasksFromLocalStorage(BuildContext context) {
     context.read<TaskProvider>().getTasksFromLocalStorage();

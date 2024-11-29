@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task_model/task.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/create_task_provider.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/app_text_input_field.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/priority_dropdown.dart';
@@ -9,7 +9,13 @@ import 'package:provider/provider.dart';
 
 class CreateTaskPage extends StatelessWidget {
   CreateTaskPage(BuildContext context, {super.key, this.task}){
-    context.read<CreateTaskProvider>().clear();
+    final provider = context.read<CreateTaskProvider>();
+    bool createingNewTask = task == null;
+    if(createingNewTask){
+      provider.clear();
+    }else{
+      provider.initalizeEditTaskFields(task!);
+    }
   }
 
   final TaskModel? task;
@@ -63,7 +69,7 @@ class CreateTaskPage extends StatelessWidget {
                   WideButton(
                     height: 56,
                     fontSize: 24,
-                    label: task == null ? 'Add' : 'Edit',
+                    label: 'Save',
                     onTap: () => provider.createTask(context),
                     color: AppColors.addHighlight,
                   )

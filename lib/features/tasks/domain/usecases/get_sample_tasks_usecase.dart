@@ -1,14 +1,14 @@
 import 'package:dartz/dartz.dart';
 import 'package:gerenciador_de_tarefas/core/usecase/usecase.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task_page.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/repositories/i_task_repository.dart';
 
-class GetSampleTasksUsecase extends Usecase<TaskPage, NoParams>{
+class GetSampleTasksUsecase extends Usecase<List<TaskModel>, NoParams>{
   final ITaskRepository repository;
   GetSampleTasksUsecase(this.repository);
 
   @override
-  Future<Either<Exception, TaskPage>> call(NoParams params) async{
+  Future<Either<Exception, List<TaskModel>>> call(NoParams params) async{
     return await repository.getSampleTasks();
   }
   

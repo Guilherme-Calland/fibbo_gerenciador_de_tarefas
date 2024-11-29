@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:gerenciador_de_tarefas/core/enums/priority/priority.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task_model/task.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/save_local_task_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
 import 'package:provider/provider.dart';
@@ -33,18 +33,18 @@ class CreateTaskProvider extends ChangeNotifier{
 
   void onPriorityChanged(TaskPriority? value) {
     _priority = value!;
+    debugPrint("\nfibbo, priority${value?.label}\n");
     _updateWidgetsOnScreen();
   }
 
   createTask(BuildContext context){
     _titleError = _titleController.text.isEmpty;
-
+    if(_titleError){
+      _updateWidgetsOnScreen();
+    }
     bool validFields = !_titleError;
     if(validFields){
-      final taskProvider = context.read<TaskProvider>();
-      final int newTaskId = taskProvider.tasks.length + 1;
       final newTask = TaskModel(
-        id: newTaskId,
         title: _titleController.text,
         description: _descriptionController.text.isEmpty ? null : _descriptionController.text,
         priority: priority,
@@ -52,7 +52,7 @@ class CreateTaskProvider extends ChangeNotifier{
 
       context.read<TaskProvider>().addNewTask(newTask);
       Navigator.pop(context);
-      
+
       _saveTaskInLocalStorage(newTask);
     }
   }
@@ -66,5 +66,11 @@ class CreateTaskProvider extends ChangeNotifier{
       result.fold((l){
         debugPrint('$l');
       }, (r){});
+  }
+
+  void initalizeEditTaskFields(TaskModel model) {
+    _titleController.text = model.title;
+    _descriptionController.text = model.description??"";
+    _priority = model.priority;
   }
 }

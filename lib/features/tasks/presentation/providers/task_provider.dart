@@ -6,7 +6,7 @@ import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/delete_loc
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_local_task_page_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/save_local_task_page_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/presentation/widgets/warning_dialog.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task_model/task.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_sample_tasks_usecase.dart';
 
 class TaskProvider extends ChangeNotifier{
@@ -45,14 +45,14 @@ class TaskProvider extends ChangeNotifier{
         _error = true;
       },
       (taskPageResult) async{
-        _tasks.addAll(taskPageResult.tasks);
+        _tasks.addAll(taskPageResult);
         _saveTaskPageInLocalStorage();
       },
     );
 
   }
 
-  deleteTask({required BuildContext context,required int index}) {
+  deleteTask(int index) {
     _tasks.removeAt(index);
     _updateWidgetOnScreen();
     _deleteLocalTask(index);
@@ -66,10 +66,9 @@ class TaskProvider extends ChangeNotifier{
   }
 
   updateTask({
-    required BuildContext context,
     required TaskModel task,
+    required int index,
   }) {
-    int index = _tasks.indexWhere((t)=> t.id == task.id);
     _tasks[index] = task.copyWith(completed: !_tasks[index].completed);
   }
 

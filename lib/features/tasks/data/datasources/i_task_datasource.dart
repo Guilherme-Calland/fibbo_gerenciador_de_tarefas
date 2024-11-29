@@ -1,5 +1,5 @@
-import 'package:gerenciador_de_tarefas/features/tasks/data/dto/task_response_page_dto.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/data/dto/response/task_dto.dart';
 
 abstract class ITaskDatasource{
-  Future<TaskPageResponseDTO> getSampleTasks();
+  Future<List<TaskDTO>> getSampleTasks();
 }
