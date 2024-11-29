@@ -6,7 +6,11 @@ class TaskFilterProvider extends ChangeNotifier{
   CompleteFilter? get completeFilter => _completeFilter;
 
   changeFilter(CompleteFilter? value){
-    _completeFilter = value;
+    if(_completeFilter == value){
+      _completeFilter = null;
+    }else{
+      _completeFilter = value;
+    }
     _updateScreenWidgets();
   }
 

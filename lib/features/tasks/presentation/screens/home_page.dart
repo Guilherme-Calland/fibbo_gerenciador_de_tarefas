@@ -80,7 +80,7 @@ class HomePage extends StatelessWidget {
                                         children: [
                                           if(index != 0)
                                           Container(
-                                            margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                                            margin: const EdgeInsets.symmetric(horizontal: 8.0),
                                             height: 16,
                                             width: 1,
                                             color: AppColors.borderColor,
