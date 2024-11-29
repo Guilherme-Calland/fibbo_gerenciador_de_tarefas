@@ -3,8 +3,6 @@ import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/enums/complete_filter.dart';
 import 'package:gerenciador_de_tarefas/core/enums/priority/priority.dart';
 import 'package:gerenciador_de_tarefas/core/usecase/usecase.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/data/adapters/task_adapter.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/data/dto/request/update_task_request_dto.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/delete_all_local_tasks_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/delete_local_task_usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/usecases/get_local_task_page_usecase.dart';
@@ -41,9 +39,6 @@ class TaskProvider extends ChangeNotifier{
   bool get error => _error;
 
   List<TaskModel> _tasks = [];
-
-  int? editingIndex;
-
   List<TaskModel> get tasks => _tasks;
 
   void _updateWidgetOnScreen(){
@@ -65,14 +60,14 @@ class TaskProvider extends ChangeNotifier{
 
   }
 
-  deleteTask(int index) {
-    _tasks.removeAt(index);
+  deleteTask(int id) {
+    _tasks.removeWhere((t)=> t.id == id);
     _updateWidgetOnScreen();
-    _deleteLocalTask(index);
+    _deleteLocalTask(id);
   }
 
-  Future<void> _deleteLocalTask(int index) async {
-    final result = await deleteLocalTaskUsecase.call(index);
+  Future<void> _deleteLocalTask(int id) async {
+    final result = await deleteLocalTaskUsecase.call(id);
     result.fold((l){
       debugPrint('$l');
     }, (r){});
@@ -183,36 +178,42 @@ class TaskProvider extends ChangeNotifier{
     }, (r){});
   }
 
-  void addNewTask(TaskModel newTask){
-    _tasks.add(newTask);
+  Future<void> addNewTask(TaskModel newTask)async{
+    int? id = await _saveTaskInLocalStorage(newTask);
+    if(id!= null){
+      _tasks.add(newTask.copyWith(id: id));
+    }
     _updateWidgetOnScreen();
-    _saveTaskInLocalStorage(newTask);
   }
 
   void editTask(TaskModel newTask){
-    _tasks[editingIndex!] = _tasks[editingIndex!].copy(newTask);
+    int index = _tasks.indexWhere((t)=> t.id == newTask.id);
+    _tasks[index] = _tasks[index].copy(newTask);
+
     _updateWidgetOnScreen();
     _updateTaskInLocalStorage(newTask);
   }
 
-  void toggleTaskComplete(index){
+  void toggleTaskComplete(int id){
+    int index = _tasks.indexWhere((t)=> t.id == id);
     _tasks[index] = _tasks[index].copyWith(completed: !_tasks[index].completed);
     _updateTaskInLocalStorage(_tasks[index]);
-
-    //fibbo
     _updateWidgetOnScreen();
   }
 
-  Future<void> _saveTaskInLocalStorage(TaskModel newTask) async {
+  Future<int?> _saveTaskInLocalStorage(TaskModel newTask) async {
     final result = await saveLocalTaskUsecase(newTask);
+    late int? id;
     result.fold((l){
       debugPrint('$l');
-    },(r){});
+    },(r){
+      id = r;
+    });
+    return id;
   }
   
   Future<void> _updateTaskInLocalStorage(TaskModel newTask) async{
-    final params = UpdateTaskRequestDTO(index: editingIndex!, task: TaskAdapter.toDTO(newTask));
-    final result = await updateLocalTaskUsecase(params);
+    final result = await updateLocalTaskUsecase(newTask);
     result.fold((l){
       debugPrint('$l');
     }, (r){});
@@ -285,6 +286,6 @@ class TaskProvider extends ChangeNotifier{
   }
 
   hasActiveFilters() {
-    return _priorities.isNotEmpty && _completeFilter == null;
+    return _priorities.isNotEmpty || _completeFilter != null;
   }
 }

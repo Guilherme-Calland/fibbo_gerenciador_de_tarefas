@@ -32,28 +32,31 @@ class CreateTaskProvider extends ChangeNotifier{
     _updateWidgetsOnScreen();
   }
 
-  createTask(BuildContext context){
+  bool createTask({required BuildContext context, TaskModel? task}){
     _titleError = _titleController.text.trim().isEmpty;
     if(_titleError){
       _updateWidgetsOnScreen();
     }
     bool validFields = !_titleError;
     if(validFields){
-      final task = TaskModel(
+      final newTask = TaskModel(
+        id: task?.id,
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
         priority: priority,
+        completed: task?.completed ?? false
       );
 
       final taskProvider = context.read<TaskProvider>();
-      bool creatingNewTask = taskProvider.editingIndex == null;
-
+      bool creatingNewTask = task == null;
       if(creatingNewTask){
-        taskProvider.addNewTask(task);
+        taskProvider.addNewTask(newTask);
       }else{
-        taskProvider.editTask(task);
+        taskProvider.editTask(newTask);
       }
-      Navigator.pop(context);
+      return true;
+    }else{
+      return false;
     }
   }
 
@@ -67,7 +70,7 @@ class CreateTaskProvider extends ChangeNotifier{
     _priority = model.priority;
   }
 
-  void onInit({TaskModel? task, int? index}) {
+  void onInit(TaskModel? task) {
     bool createingNewTask = task == null;
     if(createingNewTask){
       _clear();

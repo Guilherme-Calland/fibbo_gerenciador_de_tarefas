@@ -1,5 +1,3 @@
-import 'package:gerenciador_de_tarefas/features/tasks/data/adapters/task_adapter.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/data/dto/request/update_task_request_dto.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -15,15 +13,16 @@ class TaskHiveManager{
   static Box<TaskModel>? _taskBox;
 
   static Future<Box<TaskModel>> _initBox() async {
-    _taskBox ??= await Hive.openBox('task');
+    _taskBox ??= await Hive.openBox('task_hive');
     return Future.value(_taskBox);
   }
 
-  Future<bool> saveTask(TaskModel params) async {
+  Future<int> saveTask(TaskModel params) async {
     try{
       final box = await _initBox();
-      await box.add(params);
-      return true;
+      final newTask = params.copyWith(id: box.length + 1);
+      await box.put(newTask.id, newTask);
+      return newTask.id!;
     }catch(e){
       throw Exception('$e');
     }
@@ -32,7 +31,9 @@ class TaskHiveManager{
   Future<bool> saveTaskPage(List<TaskModel> params) async {
     try{
       final box = await _initBox();
-      await box.addAll(params);
+      for(var task in params){
+        box.put(task.id, task);
+      }
       return true;
     }catch(e){
       throw Exception(e);
@@ -42,27 +43,27 @@ class TaskHiveManager{
   Future<List<TaskModel>> getTaskPage() async {
     try{
       final box = await _initBox();
-      return box.values.toList(growable: false);
+      final List<TaskModel> list =  box.values.toList(growable: false);
+      return list..sort((a, b) => a.id!.compareTo(b.id!));
     }catch(e){
       throw Exception(e);
     }
   }
 
-  Future<bool> updateTask(UpdateTaskRequestDTO params)async{
+  Future<bool> updateTask(TaskModel task)async{
     try{
       final box = await _initBox();
-      final task = TaskAdapter.fromDTO(params.task);
-      await box.putAt(params.index, task);
+      await box.put(task.id!, task);
       return true;
     }catch(e){
       throw Exception(e);
     }
   }
 
-  Future<bool> deleteTask(int index) async {
+  Future<bool> deleteTask(int id) async {
     try{
       final box = await _initBox();
-      await box.deleteAt(index);
+      await box.delete(id);
       return true;
     }catch(e){
       throw Exception(e);

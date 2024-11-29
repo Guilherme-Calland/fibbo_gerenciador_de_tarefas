@@ -1,7 +1,7 @@
 import 'package:gerenciador_de_tarefas/core/network/api_client.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/data/adapters/task_adapter.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/data/datasources/i_task_datasource.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/data/dto/response/task_dto.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/data/dto/task_dto.dart';
 
 class TaskDatasource implements ITaskDatasource{
   TaskDatasource._(this.apiClient);

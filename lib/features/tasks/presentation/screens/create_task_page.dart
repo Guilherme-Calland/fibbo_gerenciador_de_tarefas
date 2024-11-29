@@ -61,7 +61,12 @@ class CreateTaskPage extends StatelessWidget {
                     height: 56,
                     fontSize: 24,
                     label: 'Save',
-                    onTap: () => provider.createTask(context),
+                    onTap: (){
+                      bool validFields = provider.createTask(context: context, task: task);
+                      if(validFields){
+                        Navigator.pop(context);
+                      }
+                    },
                     color: AppColors.addHighlight,
                   )
                 ],

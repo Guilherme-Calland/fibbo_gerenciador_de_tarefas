@@ -132,10 +132,9 @@ class HomePage extends StatelessWidget {
                               ),
                               onTap: ()=>  _goToCreateTaskPage(context: context, index: index, task: model),
                               onCompleteToggle: (){
-                                taskProvider.editingIndex = index;
-                                taskProvider.toggleTaskComplete(index);
+                                taskProvider.toggleTaskComplete(model.id!);
                               },
-                              onDeletePressed: () => taskProvider.deleteTask(index),
+                              onDeletePressed: () => taskProvider.deleteTask(model.id!),
                             );
                           },
                         );
@@ -188,16 +187,8 @@ class HomePage extends StatelessWidget {
     int? index,
     TaskModel? task,
   }) {
-    final taskProvider = context.read<TaskProvider>();
-    bool creatingNewTask = task == null;
-    if(creatingNewTask){
-      taskProvider.editingIndex = null;
-    }else{
-      taskProvider.editingIndex = index;
-    }
-
     final createTaskProvider = context.read<CreateTaskProvider>();
-    createTaskProvider.onInit(task: task, index: index);
+    createTaskProvider.onInit(task);
     Navigator.pushNamed(context, AppRoutePaths.create, arguments: task);
   }
   

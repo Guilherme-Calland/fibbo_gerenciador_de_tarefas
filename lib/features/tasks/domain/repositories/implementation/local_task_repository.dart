@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:gerenciador_de_tarefas/core/hive/task_hive_manager.dart';
-import 'package:gerenciador_de_tarefas/features/tasks/data/dto/request/update_task_request_dto.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/domain/repositories/i_local_task_repository.dart';
 
@@ -11,7 +10,7 @@ class LocalTaskRepository implements ILocalTaskRepository{
   LocalTaskRepository(this.datasource);
 
   @override
-  Future<Either<Exception, bool>> saveTask(TaskModel params) async{
+  Future<Either<Exception, int>> saveTask(TaskModel params) async{
     try{
       final result = await datasource.saveTask(params);
       return Right(result);
@@ -61,7 +60,7 @@ class LocalTaskRepository implements ILocalTaskRepository{
   }
 
   @override
-  Future<Either<Exception, bool>> updateTask(UpdateTaskRequestDTO params)async {
+  Future<Either<Exception, bool>> updateTask(TaskModel params)async {
     try{
       final result = await datasource.updateTask(params);
       return Right(result);
