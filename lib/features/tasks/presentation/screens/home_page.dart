@@ -77,7 +77,11 @@ class HomePage extends StatelessWidget {
                               const SizedBox(height: 8.0,),
                               PriorityFilter(
                                 selectedPriorities: provider.priorities,
-                                onPrioritySelected: provider.addNewPriorityFilter,
+                                onPrioritySelected: (val) =>
+                                  provider.addNewPriorityFilter(
+                                context: context,
+                                value: val,
+                              ),
                               )
                             ],
                           ),

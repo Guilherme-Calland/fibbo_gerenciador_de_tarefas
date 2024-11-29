@@ -35,7 +35,6 @@ class LabeledButton extends StatelessWidget {
               color: AppColors.foregroundColor,
               borderRadius: AppDecorations.borderRadiusSmall,
               boxShadow: AppDecorations.shadow,
-              border: Border.all(color: AppColors.borderColor)
             ),
             child: Text(label!, style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),)
           ),

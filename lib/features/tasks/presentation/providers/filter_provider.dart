@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/enums/priority/priority.dart';
+import 'package:gerenciador_de_tarefas/features/tasks/presentation/providers/task_provider.dart';
+import 'package:provider/provider.dart';
 
 class FilterProvider extends ChangeNotifier{
   bool _expanded = false;
@@ -17,10 +19,13 @@ class FilterProvider extends ChangeNotifier{
     return priorities.isNotEmpty;
   }
   
-  addNewPriorityFilter(TaskPriority value){
-    if(_priorities.contains(value)){
+  addNewPriorityFilter({
+    required BuildContext context,
+    required TaskPriority value,
+  }) {
+    if (_priorities.contains(value)) {
       _priorities.remove(value);
-    }else{
+    } else {
       _priorities.add(value);
     }
 
@@ -30,6 +35,7 @@ class FilterProvider extends ChangeNotifier{
     }
 
     notifyListeners();
+    context.read<TaskProvider>().filterPriorities(_priorities);
   }
 
 }

@@ -20,7 +20,6 @@ class CreateTaskSuggestionButton extends StatelessWidget {
           color: AppColors.foregroundColor,
           borderRadius: AppDecorations.borderRadiusSmall,
           boxShadow: AppDecorations.shadow,
-          border: Border.all(color: AppColors.borderColor)  
         ),
         child: const Text(
           "Task list empty, add a new task!",

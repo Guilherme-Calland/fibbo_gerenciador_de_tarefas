@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciador_de_tarefas/core/constants/colors.dart';
 import 'package:gerenciador_de_tarefas/core/enums/complete_filter.dart';
+import 'package:gerenciador_de_tarefas/core/enums/priority/priority.dart';
 import 'package:gerenciador_de_tarefas/core/usecase/usecase.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/data/adapters/task_adapter.dart';
 import 'package:gerenciador_de_tarefas/features/tasks/data/dto/request/update_task_request_dto.dart';
@@ -223,33 +224,43 @@ class TaskProvider extends ChangeNotifier{
   CompleteFilter? get completeFilter => _completeFilter;
 
   Future<void> changeFilter(CompleteFilter? value)async{
+    if(_completeFilter == value){
+      _completeFilter = null;
+    }else{
+      _completeFilter = value;
+    }
+    await _filterTasks();
+  }
+
+  List<TaskPriority> _priorities = [];
+  Future<void> filterPriorities(List<TaskPriority> priorities) async{
+    _priorities = priorities;
+    await _filterTasks();
+  }
+
+  Future<void> _filterTasks() async {
     final allTasksResult = await getLocalTaskPageUsecase(NoParams());
     allTasksResult.fold((l){
       debugPrint('$l');
     }, (allTasks){
-      if(_completeFilter == value){
-        _completeFilter = null;
-      }else{
-        _completeFilter = value;
-      }
-      
-      final List<TaskModel> filteredTasks = [];
+      List<TaskModel> filteredTasks = [];
       for(var task in allTasks){
-        if(_completeFilter == null || 
-        (_completeFilter == CompleteFilter.complete && task.completed) || 
-        (_completeFilter == CompleteFilter.pending && !task.completed)){
+        if(_passedCompletedFilter(task.completed) && _passedPriorityFilter(task.priority)){
           filteredTasks.add(task);
         }
       }
-
       _tasks = filteredTasks;
-
-      //fibbo
-      debugPrint('\n');
-      for(var t in _tasks){
-        debugPrint("FIBBO, fibbo ${t.title} ${t.completed}");
-      }
       _updateWidgetOnScreen();
     });
+  }
+
+  bool _passedPriorityFilter(TaskPriority priority){
+    return _priorities.contains(priority) || _priorities.isEmpty;
+  }
+  
+  bool _passedCompletedFilter(bool completed) {
+    return _completeFilter == null || 
+      (_completeFilter == CompleteFilter.complete && completed) || 
+      (_completeFilter == CompleteFilter.pending && !completed);
   }
 }
