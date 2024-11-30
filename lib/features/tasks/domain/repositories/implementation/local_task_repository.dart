@@ -4,7 +4,6 @@ import 'package:gerenciador_de_tarefas/features/tasks/domain/entities/task.dart'
 import 'package:gerenciador_de_tarefas/features/tasks/domain/repositories/i_local_task_repository.dart';
 
 class LocalTaskRepository implements ILocalTaskRepository{
-
   final TaskHiveManager datasource;
 
   LocalTaskRepository(this.datasource);

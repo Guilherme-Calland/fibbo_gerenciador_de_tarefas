@@ -199,6 +199,7 @@ class TaskProvider extends ChangeNotifier{
       _tasks.add(newTask.copyWith(id: id));
       _tasks.sort(_sortTaskOrder);
     }
+    _filterTasks();
     _updateWidgetOnScreen();
   }
 
@@ -223,11 +224,11 @@ class TaskProvider extends ChangeNotifier{
     }
   }
 
-  void editTask(TaskModel newTask){
+  void editTask(TaskModel newTask)async{
     int index = _tasks.indexWhere((t)=> t.id == newTask.id);
     _tasks[index] = _tasks[index].copy(newTask);
     _tasks.sort(_sortTaskOrder);
-
+    await _filterTasks();
     _updateWidgetOnScreen();
     _updateTaskInLocalStorage(newTask);
   }
@@ -236,6 +237,7 @@ class TaskProvider extends ChangeNotifier{
     int index = _tasks.indexWhere((t)=> t.id == id);
     _tasks[index] = _tasks[index].copyWith(completed: !_tasks[index].completed);
     _updateTaskInLocalStorage(_tasks[index]);
+    _filterTasks();
     _updateWidgetOnScreen();
   }
 
@@ -269,6 +271,8 @@ class TaskProvider extends ChangeNotifier{
       _completeFilter = value;
     }
     await _filterTasks();
+    _updateWidgetOnScreen();
+
   }
 
   List<TaskPriority> _priorities = [];
@@ -277,6 +281,8 @@ class TaskProvider extends ChangeNotifier{
   Future<void> filterPriorities(List<TaskPriority> priorities) async{
     _priorities = priorities;
     await _filterTasks();
+    _updateWidgetOnScreen();
+
   }
 
   Future<void> _filterTasks() async {
@@ -292,7 +298,6 @@ class TaskProvider extends ChangeNotifier{
       }
       _tasks = filteredTasks;
       _tasks.sort(_sortTaskOrder);
-      _updateWidgetOnScreen();
     });
   }
 
